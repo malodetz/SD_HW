@@ -1,6 +1,8 @@
 plugins {
     id 'java'
     id 'application'
+    id "cup.gradle.cup-gradle-plugin" version "2.0"
+    id "org.xbib.gradle.plugin.jflex" version "1.7.0"
 }
 
 group 'ru.hse.fmcs'
@@ -13,6 +15,7 @@ repositories {
 dependencies {
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.1'
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.1'
+    implementation 'org.apache.commons:commons-lang3:3.0'
 }
 
 application {
