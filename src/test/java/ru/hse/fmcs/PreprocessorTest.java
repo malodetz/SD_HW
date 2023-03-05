@@ -18,7 +18,7 @@ public class PreprocessorTest {
   @Test
   public void simpleStringTest() {
     String query = "echo 'Hello world!'";
-    assert (query.equals(preprocessor.preprocess(query)));
+    assert (query.equals(preprocessor.processSubstitutions(query)));
   }
 
   @Test
@@ -26,7 +26,7 @@ public class PreprocessorTest {
     env.addVariable("a", "10");
     String query = "$a";
     String expectedQuery = "10";
-    assert (expectedQuery.equals(preprocessor.preprocess(query)));
+    assert (expectedQuery.equals(preprocessor.processSubstitutions(query)));
   }
 
   @Test
@@ -34,13 +34,13 @@ public class PreprocessorTest {
     env.addVariable("a", "\"echo a\"");
     String query = "$a";
     String expectedQuery = "echo a";
-    assert (expectedQuery.equals(preprocessor.preprocess(query)));
+    assert (expectedQuery.equals(preprocessor.processSubstitutions(query)));
 
     env.addVariable("b", "'echo b'");
     String anotherQuery = "$b";
     String expectedAnotherQuery = "echo b";
-    System.out.println(preprocessor.preprocess(anotherQuery));
-    assert (expectedAnotherQuery.equals(preprocessor.preprocess(anotherQuery)));
+    System.out.println(preprocessor.processSubstitutions(anotherQuery));
+    assert (expectedAnotherQuery.equals(preprocessor.processSubstitutions(anotherQuery)));
   }
 
   @Test
@@ -48,7 +48,7 @@ public class PreprocessorTest {
     env.addVariable("a", "'a'b'c''d''e'f'g'");
     String query = "$a";
     String expectedQuery = "abcdefg";
-    assert (expectedQuery.equals(preprocessor.preprocess(query)));
+    assert (expectedQuery.equals(preprocessor.processSubstitutions(query)));
   }
 
   @Test
@@ -56,15 +56,15 @@ public class PreprocessorTest {
     env.addVariable("a", "|");
     String query = "echo a $a cat";
     String expectedQuery = "echo a \\| cat";
-    assert (expectedQuery.equals(preprocessor.preprocess(query)));
+    assert (expectedQuery.equals(preprocessor.processSubstitutions(query)));
   }
 
   @Test
   public void removeAllQuotesFromEnvVarWithEscapingTest() {
     env.addVariable("a", "\"Special 'case \"of 'string'\"'!\"");
     String query = "$a";
-    String expectedQuery = "Special \\'case of \\'string\\'\\'\\!";
-    assert (expectedQuery.equals(preprocessor.preprocess(query)));
+    String expectedQuery = "Special \\'case of \\'string\\'\\'!";
+    assert (expectedQuery.equals(preprocessor.processSubstitutions(query)));
   }
 
   @Test
@@ -72,7 +72,7 @@ public class PreprocessorTest {
     env.addVariable("a", "10");
     String query = "\"$a\"";
     String expectedQuery = "\"10\"";
-    assert (expectedQuery.equals(preprocessor.preprocess(query)));
+    assert (expectedQuery.equals(preprocessor.processSubstitutions(query)));
   }
 
   @Test
@@ -80,13 +80,13 @@ public class PreprocessorTest {
     env.addVariable("a", "10");
     String query = "'$a'";
     String expectedQuery = "'$a'";
-    assert (expectedQuery.equals(preprocessor.preprocess(query)));
+    assert (expectedQuery.equals(preprocessor.processSubstitutions(query)));
   }
 
   @Test
   public void emptyVarTest() {
     String query = "echo $";
     String expectedQuery = "echo $";
-    assert (expectedQuery.equals(preprocessor.preprocess(query)));
+    assert (expectedQuery.equals(preprocessor.processSubstitutions(query)));
   }
 }

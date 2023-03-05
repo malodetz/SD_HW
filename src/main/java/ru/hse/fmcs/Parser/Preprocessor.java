@@ -48,6 +48,17 @@ public class Preprocessor {
     return result.toString();
   }
 
+  private String escapeSpecialSymbols(final String command) {
+    StringBuilder result = new StringBuilder();
+    for (int index = 0; index < command.length(); ++index) {
+      if (command.charAt(index) == '\'' || command.charAt(index) == '"' || command.charAt(index) == '\\') {
+        result.append('\\');
+      }
+      result.append(command.charAt(index));
+    }
+    return result.toString();
+  }
+
   public Preprocessor(final Environment environment) {
     this.environment = environment;
   }
@@ -63,7 +74,7 @@ public class Preprocessor {
    * @return command with substituted arguments.
    * @author sergey
    */
-  public String preprocess(final String command) {
+  public String processSubstitutions(final String command) {
     StringBuilder result = new StringBuilder();
     Matcher matcher = substitutionPattern.matcher(command);
 
