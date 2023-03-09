@@ -1,0 +1,3 @@
+Good test for CLI!
+
+Bye :)

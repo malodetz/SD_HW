@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import java.util.StringTokenizer;
 
 public class FunctionCaller implements FunctionCallerInterface {
-    FunctionCaller() {
+    public FunctionCaller() {
         functions.put("echo", FunctionCaller::echoImplementation);
         functions.put("cat", FunctionCaller::catImplementation);
         functions.put("wc", FunctionCaller::wcImplementation);
@@ -36,7 +36,7 @@ public class FunctionCaller implements FunctionCallerInterface {
         }
         String filename = query.args.get(0);
         Path path = Paths.get(ROOT_DIRECTORY + filename);
-        return Files.readAllLines(path).get(0);
+        return String.join("\n", Files.readAllLines(path));
     }
 
     private static String wcImplementation(Query query) throws WrongArgumentsException, IOException {
@@ -60,6 +60,6 @@ public class FunctionCaller implements FunctionCallerInterface {
         throw new ExitException();
     }
 
-    private static final String ROOT_DIRECTORY = "../kek/";
+    private static final String ROOT_DIRECTORY = "./root/";
 
 }
