@@ -1,7 +1,6 @@
 package ru.hse.fmcs.Core;
 
-import ru.hse.fmcs.FunctionCaller.FunctionCallerInterface;
-import ru.hse.fmcs.FunctionCaller.Query;
+import ru.hse.fmcs.FunctionCaller.*;
 import ru.hse.fmcs.Parsing.AST;
 import ru.hse.fmcs.Parsing.ASTConstructor;
 import ru.hse.fmcs.Parsing.ASTNode.*;
@@ -9,6 +8,7 @@ import ru.hse.fmcs.Parsing.ParsingException;
 import ru.hse.fmcs.Parsing.Preprocessor;
 
 import java.io.ByteArrayInputStream;
+import java.io.IOException;
 import java.util.List;
 
 /**
@@ -35,14 +35,14 @@ public class Interpreter {
    *
    * @param pipedCommands "list" of piped commands.
    */
-  private void executeCompoundCommands(final ASTNodePipedCommands pipedCommands) {
+  private void executeCompoundCommands(final ASTNodePipedCommands pipedCommands) throws UnexpectedFunctionName, WrongArgumentsException, IOException, ExitException {
     final List<ASTNode> commands = pipedCommands.toList();
     for (var command : commands) {
       executeCommand(command);
     }
   }
 
-  private String executeCommand(final ASTNode command) {
+  private String executeCommand(final ASTNode command) throws UnexpectedFunctionName, WrongArgumentsException, IOException, ExitException {
     if (command instanceof ASTNodeFunctionCall functionCall) {
       String functionName = functionCall.functionName;
       List<String> arguments = functionCall.argumentsList().stream().map(ASTNodeArgument::toString).toList();
@@ -89,7 +89,8 @@ public class Interpreter {
         System.err.println("This should not happen");
         assert false;
       }
-    } catch (ParsingException exception) {
+    } catch (ParsingException | UnexpectedFunctionName | WrongArgumentsException | IOException |
+             ExitException exception) {
       exception.printStackTrace();
       System.exit(1);
     }
