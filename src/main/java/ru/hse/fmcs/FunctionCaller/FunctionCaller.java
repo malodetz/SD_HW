@@ -14,10 +14,12 @@ public class FunctionCaller implements FunctionCallerInterface {
         functions.put("echo", FunctionCaller::echoImplementation);
         functions.put("cat", FunctionCaller::catImplementation);
         functions.put("wc", FunctionCaller::wcImplementation);
+        functions.put("pwd", FunctionCaller::pwdImplementation);
+        functions.put("exit", FunctionCaller::exitImplementation);
     }
 
     @Override
-    public String HandleFunction(Query query) throws WrongArgumentsException, UnexpectedFunctionName, IOException {
+    public String HandleFunction(Query query) throws WrongArgumentsException, UnexpectedFunctionName, IOException, ExitException {
         if (functions.containsKey(query.name)) {
             return functions.get(query.name).apply(query);
         }
@@ -50,6 +52,14 @@ public class FunctionCaller implements FunctionCallerInterface {
         return String.join(" ", list);
     }
 
-    private static String ROOT_DIRECTORY = "../kek/";
+    private static String pwdImplementation(Query query) {
+        return ROOT_DIRECTORY;
+    }
+
+    private static String exitImplementation(Query query) throws ExitException {
+        throw new ExitException();
+    }
+
+    private static final String ROOT_DIRECTORY = "../kek/";
 
 }
