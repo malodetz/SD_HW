@@ -1,14 +1,19 @@
 package ru.hse.fmcs.FunctionCaller;
 
+import org.apache.commons.lang3.StringUtils;
+
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.StringTokenizer;
 
 public class FunctionCaller implements FunctionCallerInterface {
     FunctionCaller() {
         functions.put("echo", FunctionCaller::echoImplementation);
         functions.put("cat", FunctionCaller::catImplementation);
+        functions.put("wc", FunctionCaller::wcImplementation);
     }
 
     @Override
@@ -30,6 +35,19 @@ public class FunctionCaller implements FunctionCallerInterface {
         String filename = query.args.get(0);
         Path path = Paths.get(ROOT_DIRECTORY + filename);
         return Files.readAllLines(path).get(0);
+    }
+
+    private static String wcImplementation(Query query) throws WrongArgumentsException, IOException {
+        String catResult = catImplementation(query);
+        int lines_number = StringUtils.countMatches(catResult, "\n");
+        StringTokenizer stringTokenizer = new StringTokenizer(catResult);
+        int words_number = stringTokenizer.countTokens();
+        int chars_number = catResult.length();
+        ArrayList<String> list = new ArrayList<>();
+        list.add(String.valueOf(lines_number));
+        list.add(String.valueOf(words_number));
+        list.add(String.valueOf(chars_number));
+        return String.join(" ", list);
     }
 
     private static String ROOT_DIRECTORY = "../kek/";
