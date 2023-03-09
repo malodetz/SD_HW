@@ -2,8 +2,9 @@ package ru.hse.fmcs.FunctionCaller;
 
 import java.util.HashMap;
 import java.util.concurrent.Callable;
+import java.util.function.Function;
 
 public interface FunctionCallerInterface {
-    HashMap<String, Callable<Query>> functions = new HashMap<>();
-    String HandleFunction(Query query);
+    HashMap<String, CheckedFunction<Query, String>> functions = new HashMap<>();
+    String HandleFunction(Query query) throws WrongArgumentsException, UnexpectedFunctionName;
 }
