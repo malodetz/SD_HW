@@ -15,8 +15,11 @@ import java.util.stream.Stream;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class FunctionCallerTest {
+    private final String correct_filename = "lol.txt";
+    private final String wrong_filename = "no-existing-file.txt";
     private final String cat = "cat";
     private final String echo = "echo";
+    private final String wc = "wc";
 
     private FunctionCaller functionCaller;
 
@@ -27,36 +30,22 @@ public class FunctionCallerTest {
 
     @Test
     public void catSuccessTest() {
-        String filename = "lol.txt";
-        Query catQuery = new Query(cat, new ArrayList<>(Collections.singleton(filename)));
-        assertDoesNotThrow(() -> {
-            assertEquals("Good test for CLI!\n" + "\n" + "Bye :)",
-                    functionCaller.HandleFunction(catQuery));
-        });
-    }
-
-    @Test
-    public void catNoArgumentsTest() {
-        Query catQuery = new Query(cat, new ArrayList<>());
-        assertThrows(WrongArgumentsException.class,
-                () -> functionCaller.HandleFunction(catQuery),
-                "cat expected exactly 1 argument! Have 0 arguments.");
+        Query catQuery = new Query(cat, new ArrayList<>(Collections.singleton(correct_filename)));
+        assertDoesNotThrow(() -> assertEquals("Good test for CLI!\n" + "\n" + "Bye :)",
+                functionCaller.HandleFunction(catQuery)));
     }
 
     @Test
     public void catNoSuchFileTest() {
-        String filename = "no-existing-file.txt";
-        Query catQuery = new Query(cat, new ArrayList<>(Collections.singleton(filename)));
+        Query catQuery = new Query(cat, new ArrayList<>(Collections.singleton(wrong_filename)));
         assertThrows(IOException.class, () -> functionCaller.HandleFunction(catQuery));
     }
 
     @Test
-    public void catMultipleArgumentsTest() {
-        String filename = "no-existing-file.txt";
-        Query catQuery = new Query(cat, Stream.of(filename, filename).collect(Collectors.toCollection(ArrayList::new)));
-        assertThrows(WrongArgumentsException.class,
-                () -> functionCaller.HandleFunction(catQuery),
-                "cat expected exactly 1 argument! Have 2 arguments.");
+    public void catNotSingleArgumentTest() {
+        Query catQuery = new Query(cat, Stream.of(correct_filename, wrong_filename).collect(Collectors.toCollection(ArrayList::new)));
+        WrongArgumentsException thrown = assertThrows(WrongArgumentsException.class, () -> functionCaller.HandleFunction(catQuery));
+        assertEquals("Expected exactly 1 argument! Have 2 arguments.", thrown.getMessage());
     }
 
     @Test
@@ -69,5 +58,24 @@ public class FunctionCallerTest {
     public void echoMultipleArgumentsTest() {
         Query echoQuery = new Query(echo, Stream.of("kek", "lol").collect(Collectors.toCollection(ArrayList::new)));
         assertDoesNotThrow(() -> assertEquals("kek lol", functionCaller.HandleFunction(echoQuery)));
+    }
+
+    @Test
+    public void wcSuccessTest() {
+        Query wcQuery = new Query(wc, new ArrayList<>(Collections.singleton(correct_filename)));
+        assertDoesNotThrow(() -> assertEquals("3 6 26", functionCaller.HandleFunction(wcQuery)));
+    }
+
+    @Test
+    public void wcNoSuchFileTest() {
+        Query wcQuery = new Query(wc, new ArrayList<>(Collections.singleton(wrong_filename)));
+        assertThrows(IOException.class, () -> functionCaller.HandleFunction(wcQuery));
+    }
+
+    @Test
+    public void wcNotSingleArgumentTest() {
+        Query wcQuery = new Query(wc, Stream.of(correct_filename, wrong_filename).collect(Collectors.toCollection(ArrayList::new)));
+        WrongArgumentsException thrown = assertThrows(WrongArgumentsException.class, () -> functionCaller.HandleFunction(wcQuery));
+        assertEquals("Expected exactly 1 argument! Have 2 arguments.", thrown.getMessage());
     }
 }
