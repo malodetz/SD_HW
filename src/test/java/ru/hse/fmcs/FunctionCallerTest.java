@@ -2,6 +2,7 @@ package ru.hse.fmcs;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import ru.hse.fmcs.FunctionCaller.ExitException;
 import ru.hse.fmcs.FunctionCaller.FunctionCaller;
 import ru.hse.fmcs.FunctionCaller.Query;
 import ru.hse.fmcs.FunctionCaller.WrongArgumentsException;
@@ -21,6 +22,7 @@ public class FunctionCallerTest {
     private final String echo = "echo";
     private final String wc = "wc";
     private final String pwd = "pwd";
+    private final String exit = "exit";
 
     private FunctionCaller functionCaller;
 
@@ -91,6 +93,19 @@ public class FunctionCallerTest {
     public void pwdNotZeroArgumentsTest() {
         Query pwdQuery = new Query(pwd, new ArrayList<>(Collections.singleton(correct_filename)));
         assertThrows(WrongArgumentsException.class, () -> functionCaller.HandleFunction(pwdQuery));
+    }
+
+
+    @Test
+    public void exitSuccessTest() {
+        Query exitQuery = new Query(exit, new ArrayList<>());
+        assertThrows(ExitException.class, () -> functionCaller.HandleFunction(exitQuery));
+    }
+
+    @Test
+    public void exitNotZeroArgumentsTest() {
+        Query exitQuery = new Query(exit, new ArrayList<>(Collections.singleton(correct_filename)));
+        assertThrows(WrongArgumentsException.class, () -> functionCaller.HandleFunction(exitQuery));
     }
 
 }
