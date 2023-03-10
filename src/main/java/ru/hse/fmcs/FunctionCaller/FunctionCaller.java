@@ -32,7 +32,7 @@ public class FunctionCaller implements FunctionCallerInterface {
 
     private static String catImplementation(Query query) throws WrongArgumentsException, IOException {
         if (query.args.size() != 1) {
-            throw new WrongArgumentsException("cat expected exactly 1 argument! Have " + query.args.size() + " arguments.");
+            throw new WrongArgumentsException("Expected exactly 1 argument! Have " + query.args.size() + " arguments.");
         }
         String filename = query.args.get(0);
         Path path = Paths.get(ROOT_DIRECTORY + filename);
@@ -42,6 +42,9 @@ public class FunctionCaller implements FunctionCallerInterface {
     private static String wcImplementation(Query query) throws WrongArgumentsException, IOException {
         String catResult = catImplementation(query);
         int lines_number = StringUtils.countMatches(catResult, "\n");
+        if (!catResult.endsWith("\n")) {
+            lines_number += 1;
+        }
         StringTokenizer stringTokenizer = new StringTokenizer(catResult);
         int words_number = stringTokenizer.countTokens();
         int chars_number = catResult.length();
