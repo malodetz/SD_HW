@@ -20,6 +20,7 @@ public class FunctionCallerTest {
     private final String cat = "cat";
     private final String echo = "echo";
     private final String wc = "wc";
+    private final String pwd = "pwd";
 
     private FunctionCaller functionCaller;
 
@@ -45,7 +46,7 @@ public class FunctionCallerTest {
     public void catNotSingleArgumentTest() {
         Query catQuery = new Query(cat, Stream.of(correct_filename, wrong_filename).collect(Collectors.toCollection(ArrayList::new)));
         WrongArgumentsException thrown = assertThrows(WrongArgumentsException.class, () -> functionCaller.HandleFunction(catQuery));
-        assertEquals("Expected exactly 1 argument! Have 2 arguments.", thrown.getMessage());
+        assertEquals("Expected 1 argument! Got 2.", thrown.getMessage());
     }
 
     @Test
@@ -76,6 +77,20 @@ public class FunctionCallerTest {
     public void wcNotSingleArgumentTest() {
         Query wcQuery = new Query(wc, Stream.of(correct_filename, wrong_filename).collect(Collectors.toCollection(ArrayList::new)));
         WrongArgumentsException thrown = assertThrows(WrongArgumentsException.class, () -> functionCaller.HandleFunction(wcQuery));
-        assertEquals("Expected exactly 1 argument! Have 2 arguments.", thrown.getMessage());
+        assertEquals("Expected 1 argument! Got 2.", thrown.getMessage());
     }
+
+    @Test
+    public void pwdSuccessTest() {
+        Query pwdQuery = new Query(pwd, new ArrayList<>());
+        assertDoesNotThrow(() ->
+                assertEquals(FunctionCaller.ROOT_DIRECTORY, functionCaller.HandleFunction(pwdQuery)));
+    }
+
+    @Test
+    public void pwdNotZeroArgumentsTest() {
+        Query pwdQuery = new Query(pwd, new ArrayList<>(Collections.singleton(correct_filename)));
+        assertThrows(WrongArgumentsException.class, () -> functionCaller.HandleFunction(pwdQuery));
+    }
+
 }
