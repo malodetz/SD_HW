@@ -32,7 +32,7 @@ public class FunctionCaller implements FunctionCallerInterface {
 
     private static String catImplementation(Query query) throws WrongArgumentsException, IOException {
         if (query.args.size() != 1) {
-            throw new WrongArgumentsException("Expected exactly 1 argument! Have " + query.args.size() + " arguments.");
+            throw new WrongArgumentsException(1, query.args.size());
         }
         String filename = query.args.get(0);
         Path path = Paths.get(ROOT_DIRECTORY + filename);
@@ -55,14 +55,20 @@ public class FunctionCaller implements FunctionCallerInterface {
         return String.join(" ", list);
     }
 
-    private static String pwdImplementation(Query query) {
+    private static String pwdImplementation(Query query) throws WrongArgumentsException {
+        if (!query.args.isEmpty()) {
+            throw new WrongArgumentsException(0, query.args.size());
+        }
         return ROOT_DIRECTORY;
     }
 
-    private static String exitImplementation(Query query) throws ExitException {
+    private static String exitImplementation(Query query) throws ExitException, WrongArgumentsException {
+        if (!query.args.isEmpty()) {
+            throw new WrongArgumentsException(0, query.args.size());
+        }
         throw new ExitException();
     }
 
-    private static final String ROOT_DIRECTORY = "./root/";
+    public static final String ROOT_DIRECTORY = "./root/";
 
 }
