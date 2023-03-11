@@ -46,7 +46,7 @@ public class Interpreter {
     if (command instanceof ASTNodeFunctionCall functionCall) {
       String functionName = functionCall.functionName;
       List<String> arguments = functionCall.argumentsList().stream().map(ASTNodeArgument::toString).toList();
-      return functionCaller.HandleFunction(new Query(functionName, arguments));
+      return functionCaller.handleFunction(new Query(functionName, arguments));
       // TODO: wrap result and return
     } else if (command instanceof ASTNodeEnvFunctionCall envFunctionCall) {
       List<ASTNodeAssignment> assignments = envFunctionCall.assignmentList();
@@ -56,7 +56,7 @@ public class Interpreter {
       }
       String functionName = envFunctionCall.function.functionName;
       List<String> arguments = envFunctionCall.function.argumentsList().stream().map(ASTNodeArgument::toString).toList();
-      return functionCaller.HandleFunction(new Query(functionName, arguments));
+      return functionCaller.handleFunction(new Query(functionName, arguments));
       // TODO: wrap result and return
     } else if (command instanceof ASTNodeVarDecl varDecl) {
       List<ASTNodeAssignment> assignments = varDecl.declarations();
