@@ -35,50 +35,50 @@ public class FunctionCallerTest {
     public void catSuccessTest() {
         Query catQuery = new Query(cat, new ArrayList<>(Collections.singleton(correct_filename)));
         assertDoesNotThrow(() -> assertEquals("Good test for CLI!\n" + "\n" + "Bye :)",
-                functionCaller.HandleFunction(catQuery)));
+                functionCaller.handleFunction(catQuery)));
     }
 
     @Test
     public void catNoSuchFileTest() {
         Query catQuery = new Query(cat, new ArrayList<>(Collections.singleton(wrong_filename)));
-        assertThrows(IOException.class, () -> functionCaller.HandleFunction(catQuery));
+        assertThrows(IOException.class, () -> functionCaller.handleFunction(catQuery));
     }
 
     @Test
     public void catNotSingleArgumentTest() {
         Query catQuery = new Query(cat, Stream.of(correct_filename, wrong_filename).collect(Collectors.toCollection(ArrayList::new)));
-        WrongArgumentsException thrown = assertThrows(WrongArgumentsException.class, () -> functionCaller.HandleFunction(catQuery));
+        WrongArgumentsException thrown = assertThrows(WrongArgumentsException.class, () -> functionCaller.handleFunction(catQuery));
         assertEquals("Expected 1 argument! Got 2.", thrown.getMessage());
     }
 
     @Test
     public void echoNoArgumentsTest() {
         Query echoQuery = new Query(echo, new ArrayList<>());
-        assertDoesNotThrow(() -> assertEquals("", functionCaller.HandleFunction(echoQuery)));
+        assertDoesNotThrow(() -> assertEquals("", functionCaller.handleFunction(echoQuery)));
     }
 
     @Test
     public void echoMultipleArgumentsTest() {
         Query echoQuery = new Query(echo, Stream.of("kek", "lol").collect(Collectors.toCollection(ArrayList::new)));
-        assertDoesNotThrow(() -> assertEquals("kek lol", functionCaller.HandleFunction(echoQuery)));
+        assertDoesNotThrow(() -> assertEquals("kek lol", functionCaller.handleFunction(echoQuery)));
     }
 
     @Test
     public void wcSuccessTest() {
         Query wcQuery = new Query(wc, new ArrayList<>(Collections.singleton(correct_filename)));
-        assertDoesNotThrow(() -> assertEquals("3 6 26", functionCaller.HandleFunction(wcQuery)));
+        assertDoesNotThrow(() -> assertEquals("3 6 26", functionCaller.handleFunction(wcQuery)));
     }
 
     @Test
     public void wcNoSuchFileTest() {
         Query wcQuery = new Query(wc, new ArrayList<>(Collections.singleton(wrong_filename)));
-        assertThrows(IOException.class, () -> functionCaller.HandleFunction(wcQuery));
+        assertThrows(IOException.class, () -> functionCaller.handleFunction(wcQuery));
     }
 
     @Test
     public void wcNotSingleArgumentTest() {
         Query wcQuery = new Query(wc, Stream.of(correct_filename, wrong_filename).collect(Collectors.toCollection(ArrayList::new)));
-        WrongArgumentsException thrown = assertThrows(WrongArgumentsException.class, () -> functionCaller.HandleFunction(wcQuery));
+        WrongArgumentsException thrown = assertThrows(WrongArgumentsException.class, () -> functionCaller.handleFunction(wcQuery));
         assertEquals("Expected 1 argument! Got 2.", thrown.getMessage());
     }
 
@@ -86,26 +86,26 @@ public class FunctionCallerTest {
     public void pwdSuccessTest() {
         Query pwdQuery = new Query(pwd, new ArrayList<>());
         assertDoesNotThrow(() ->
-                assertEquals(FunctionCaller.ROOT_DIRECTORY, functionCaller.HandleFunction(pwdQuery)));
+                assertEquals(FunctionCaller.ROOT_DIRECTORY, functionCaller.handleFunction(pwdQuery)));
     }
 
     @Test
     public void pwdNotZeroArgumentsTest() {
         Query pwdQuery = new Query(pwd, new ArrayList<>(Collections.singleton(correct_filename)));
-        assertThrows(WrongArgumentsException.class, () -> functionCaller.HandleFunction(pwdQuery));
+        assertThrows(WrongArgumentsException.class, () -> functionCaller.handleFunction(pwdQuery));
     }
 
 
     @Test
     public void exitSuccessTest() {
         Query exitQuery = new Query(exit, new ArrayList<>());
-        assertThrows(ExitException.class, () -> functionCaller.HandleFunction(exitQuery));
+        assertThrows(ExitException.class, () -> functionCaller.handleFunction(exitQuery));
     }
 
     @Test
     public void exitNotZeroArgumentsTest() {
         Query exitQuery = new Query(exit, new ArrayList<>(Collections.singleton(correct_filename)));
-        assertThrows(WrongArgumentsException.class, () -> functionCaller.HandleFunction(exitQuery));
+        assertThrows(WrongArgumentsException.class, () -> functionCaller.handleFunction(exitQuery));
     }
 
 }
