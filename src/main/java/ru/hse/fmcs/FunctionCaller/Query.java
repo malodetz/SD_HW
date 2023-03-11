@@ -6,8 +6,8 @@ public class Query {
     String name;
     ArrayList<String> args;
 
-    public Query(String name_, ArrayList<String> args_) {
-        name = name_;
-        args = args_;
+    public Query(String name, ArrayList<String> args) {
+        this.name = name;
+        this.args = args;
     }
 }
