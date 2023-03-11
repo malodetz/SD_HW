@@ -16,7 +16,7 @@ import java.util.stream.Stream;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class FunctionCallerTest {
-    private final String correct_filename = "lol.txt";
+    private final String correct_filename = "test_file.txt";
     private final String wrong_filename = "no-existing-file.txt";
     private final String cat = "cat";
     private final String echo = "echo";
