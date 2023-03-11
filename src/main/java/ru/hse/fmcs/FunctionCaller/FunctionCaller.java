@@ -19,7 +19,7 @@ public class FunctionCaller implements FunctionCallerInterface {
     }
 
     @Override
-    public String HandleFunction(Query query) throws WrongArgumentsException, UnexpectedFunctionName, IOException, ExitException {
+    public String handleFunction(Query query) throws WrongArgumentsException, UnexpectedFunctionName, IOException, ExitException {
         if (functions.containsKey(query.name)) {
             return functions.get(query.name).apply(query);
         }
