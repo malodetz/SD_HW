@@ -19,7 +19,7 @@ public class FunctionCaller implements FunctionCallerInterface {
     }
 
     @Override
-    public String handleFunction(Query query) throws WrongArgumentsException, UnexpectedFunctionName, IOException, ExitException {
+    public String handleFunction(Query query) throws FunctionCallException, UnexpectedFunctionName, IOException, ExitException {
         if (functions.containsKey(query.name)) {
             return functions.get(query.name).apply(query);
         }
@@ -30,16 +30,16 @@ public class FunctionCaller implements FunctionCallerInterface {
         return String.join(" ", query.args);
     }
 
-    private static String catImplementation(Query query) throws WrongArgumentsException, IOException {
+    private static String catImplementation(Query query) throws FunctionCallException, IOException {
         if (query.args.size() != 1) {
-            throw new WrongArgumentsException(1, query.args.size());
+            throw new FunctionCallException("Expected " + 1 + " argument! Got " + query.args.size() + ".");
         }
         String filename = query.args.get(0);
         Path path = Paths.get(ROOT_DIRECTORY + filename);
         return String.join("\n", Files.readAllLines(path));
     }
 
-    private static String wcImplementation(Query query) throws WrongArgumentsException, IOException {
+    private static String wcImplementation(Query query) throws FunctionCallException, IOException {
         String catResult = catImplementation(query);
         int lines_number = StringUtils.countMatches(catResult, "\n");
         if (!catResult.endsWith("\n")) {
@@ -55,16 +55,16 @@ public class FunctionCaller implements FunctionCallerInterface {
         return String.join(" ", list);
     }
 
-    private static String pwdImplementation(Query query) throws WrongArgumentsException {
+    private static String pwdImplementation(Query query) throws FunctionCallException {
         if (!query.args.isEmpty()) {
-            throw new WrongArgumentsException(0, query.args.size());
+            throw new FunctionCallException("Expected " + 0 + " argument! Got " + query.args.size() + ".");
         }
         return ROOT_DIRECTORY;
     }
 
-    private static String exitImplementation(Query query) throws ExitException, WrongArgumentsException {
+    private static String exitImplementation(Query query) throws ExitException, FunctionCallException {
         if (!query.args.isEmpty()) {
-            throw new WrongArgumentsException(0, query.args.size());
+            throw new FunctionCallException("Expected " + 0 + " argument! Got " + query.args.size() + ".");
         }
         throw new ExitException();
     }

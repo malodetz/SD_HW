@@ -2,10 +2,7 @@ package ru.hse.fmcs;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import ru.hse.fmcs.FunctionCaller.ExitException;
-import ru.hse.fmcs.FunctionCaller.FunctionCaller;
-import ru.hse.fmcs.FunctionCaller.Query;
-import ru.hse.fmcs.FunctionCaller.WrongArgumentsException;
+import ru.hse.fmcs.FunctionCaller.*;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -23,6 +20,7 @@ public class FunctionCallerTest {
     private final String wc = "wc";
     private final String pwd = "pwd";
     private final String exit = "exit";
+    private final String nonExistFunction = "nonExistFunction";
 
     private FunctionCaller functionCaller;
 
@@ -47,7 +45,7 @@ public class FunctionCallerTest {
     @Test
     public void catNotSingleArgumentTest() {
         Query catQuery = new Query(cat, Stream.of(correct_filename, wrong_filename).collect(Collectors.toCollection(ArrayList::new)));
-        WrongArgumentsException thrown = assertThrows(WrongArgumentsException.class, () -> functionCaller.handleFunction(catQuery));
+        FunctionCallException thrown = assertThrows(FunctionCallException.class, () -> functionCaller.handleFunction(catQuery));
         assertEquals("Expected 1 argument! Got 2.", thrown.getMessage());
     }
 
@@ -78,7 +76,7 @@ public class FunctionCallerTest {
     @Test
     public void wcNotSingleArgumentTest() {
         Query wcQuery = new Query(wc, Stream.of(correct_filename, wrong_filename).collect(Collectors.toCollection(ArrayList::new)));
-        WrongArgumentsException thrown = assertThrows(WrongArgumentsException.class, () -> functionCaller.handleFunction(wcQuery));
+        FunctionCallException thrown = assertThrows(FunctionCallException.class, () -> functionCaller.handleFunction(wcQuery));
         assertEquals("Expected 1 argument! Got 2.", thrown.getMessage());
     }
 
@@ -92,7 +90,7 @@ public class FunctionCallerTest {
     @Test
     public void pwdNotZeroArgumentsTest() {
         Query pwdQuery = new Query(pwd, new ArrayList<>(Collections.singleton(correct_filename)));
-        assertThrows(WrongArgumentsException.class, () -> functionCaller.handleFunction(pwdQuery));
+        assertThrows(FunctionCallException.class, () -> functionCaller.handleFunction(pwdQuery));
     }
 
 
@@ -105,7 +103,13 @@ public class FunctionCallerTest {
     @Test
     public void exitNotZeroArgumentsTest() {
         Query exitQuery = new Query(exit, new ArrayList<>(Collections.singleton(correct_filename)));
-        assertThrows(WrongArgumentsException.class, () -> functionCaller.handleFunction(exitQuery));
+        assertThrows(FunctionCallException.class, () -> functionCaller.handleFunction(exitQuery));
+    }
+
+    @Test
+    public void NonExistFunctionTest() {
+        Query nonExistFunctionQuery = new Query(nonExistFunction, new ArrayList<>());
+        assertThrows(UnexpectedFunctionName.class, () -> functionCaller.handleFunction(nonExistFunctionQuery));
     }
 
 }
