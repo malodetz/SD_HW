@@ -7,5 +7,5 @@ import java.util.function.Function;
 
 public interface FunctionCallerInterface {
     HashMap<String, CheckedFunction<Query, String>> functions = new HashMap<>();
-    String handleFunction(Query query) throws WrongArgumentsException, UnexpectedFunctionName, IOException, ExitException;
+    String handleFunction(Query query) throws FunctionCallException, UnexpectedFunctionName, IOException, ExitException;
 }

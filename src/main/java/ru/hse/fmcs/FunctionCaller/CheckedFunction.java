@@ -4,5 +4,5 @@ import java.io.IOException;
 
 @FunctionalInterface
 public interface CheckedFunction<T, R> {
-    R apply(T t) throws WrongArgumentsException, IOException, ExitException;
+    R apply(T t) throws IOException, ExitException, FunctionCallException;
 }
