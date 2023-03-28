@@ -3,6 +3,7 @@ package ru.hse.fmcs.FunctionCaller;
 import org.apache.commons.lang3.StringUtils;
 
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -23,7 +24,8 @@ public class FunctionCaller implements FunctionCallerInterface {
         if (functions.containsKey(query.name)) {
             return functions.get(query.name).apply(query);
         }
-        throw new UnexpectedFunctionName("Unexpected function name " + query.name + "!");
+        Process process = Runtime.getRuntime().exec(query.name + String.join(", ", query.args));
+        return new String(process.getInputStream().readAllBytes(),  StandardCharsets.UTF_8);
     }
 
     private static String echoImplementation(Query query) {

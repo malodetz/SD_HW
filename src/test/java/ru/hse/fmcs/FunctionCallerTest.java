@@ -20,7 +20,7 @@ public class FunctionCallerTest {
     private final String wc = "wc";
     private final String pwd = "pwd";
     private final String exit = "exit";
-    private final String nonExistFunction = "nonExistFunction";
+    private final String nonExistFunction = "ps";
 
     private FunctionCaller functionCaller;
 
@@ -109,7 +109,7 @@ public class FunctionCallerTest {
     @Test
     public void NonExistFunctionTest() {
         Query nonExistFunctionQuery = new Query(nonExistFunction, new ArrayList<>());
-        assertThrows(UnexpectedFunctionName.class, () -> functionCaller.handleFunction(nonExistFunctionQuery));
+        assertDoesNotThrow(() -> functionCaller.handleFunction(nonExistFunctionQuery));
     }
 
 }
