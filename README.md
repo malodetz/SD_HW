@@ -1,10 +1,10 @@
 # SD_HW
 Repository for Software Design course homewroks
 
-# Диаграмма случаев использования
+# 1. Диаграмма случаев использования
 
 ![](hw2-1.png)
 
-# BPMN-диаграмма
+# 3. BPMN-диаграмма
 
 ![](hw2-3.png)
