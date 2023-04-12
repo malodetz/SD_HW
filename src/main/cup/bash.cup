@@ -1,0 +1,32 @@
+package Parsing;
+
+import ru.hse.fmcs.Parsing.ASTTree;
+
+class Parser;
+
+terminal AssignmentWord, Word, StringLiteral;
+
+nonterminal Assignments;
+nonterminal Argument, ArgumentsList;
+nonterminal Function, FunctionCall;
+nonterminal SimpleCommand;
+
+start with SimpleCommand;
+
+SimpleCommand ::= Assignments:assign FunctionCall:func {: RESULT = new ASTTree.ASTNodeSingleCommand((ASTTree.ASTNodeAssignment) assign, (ASTTree.ASTNodeFunction) func); :}
+                | {: RESULT = null; :}
+                ;
+
+Assignments ::= AssignmentWord:head Assignments:tail {: RESULT = new ASTTree.ASTNodeAssignment((String) head, (ASTTree.ASTNodeAssignment) tail); :}
+              | {: RESULT = null; :}
+              ;
+
+Function ::= Word:name | StringLiteral:name {: RESULT = name; :} ;
+FunctionCall ::= Function:func ArgumentsList:args {: RESULT = new ASTTree.ASTNodeFunction((String) func, (ASTTree.ASTNodeArgumentsList) args); :};
+
+Argument ::= Word:name | StringLiteral:name {: RESULT = new ASTTree.ASTNodeArgument((String) name); :};
+ArgumentsList ::= Argument:head ArgumentsList:tail {: RESULT = new ASTTree.ASTNodeArgumentsList((ASTTree.ASTNodeArgument) head, (ASTTree.ASTNodeArgumentsList) tail); :}
+                | {: RESULT = null; :}
+                ;
+
+

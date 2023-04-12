@@ -1,6 +1,6 @@
 package ru.hse.fmcs.Core;
 
-import ru.hse.fmcs.Parser.AST;
+import ru.hse.fmcs.Parsing.ASTTree;
 
 /**
  * @author sergey
@@ -10,10 +10,12 @@ import ru.hse.fmcs.Parser.AST;
  */
 public class Interpreter {
   final Environment env;
-  final AST ast;
 
-  public Interpreter(final AST ast) {
+  public Interpreter() {
     env = new Environment();
-    this.ast = ast;
+  }
+
+  public void traverse(ASTTree tree) {
+    
   }
 }

@@ -1,4 +1,4 @@
-package ru.hse.fmcs.Parser;
+package ru.hse.fmcs.Parsing;
 
 import ru.hse.fmcs.Core.Environment;
 
