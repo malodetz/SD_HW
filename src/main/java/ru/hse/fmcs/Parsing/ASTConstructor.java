@@ -4,6 +4,7 @@ import Parsing.Lexer;
 import Parsing.Parser;
 import java_cup.runtime.ComplexSymbolFactory;
 import java_cup.runtime.SymbolFactory;
+import ru.hse.fmcs.Parsing.ASTNode.ASTNode;
 
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -26,14 +27,14 @@ public class ASTConstructor {
     parser = new Parser(lexer, sf);
   }
 
-  public ASTTree consumeInput() throws ParsingException {
-    ASTTree.ASTNode root;
+  public AST consumeInput() throws ParsingException {
+    ASTNode root;
     try {
-      root = (ASTTree.ASTNode) parser.parse().value;
+      root = (ASTNode) parser.parse().value;
     } catch (Exception e) {
       e.printStackTrace();
       throw new ParsingException(e);
     }
-    return new ASTTree(root);
+    return new AST(root);
   }
 }

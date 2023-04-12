@@ -42,7 +42,6 @@ Word = [^\s\"\']+
       String token = yytext();
       int asgnIdx = token.indexOf('=');
       if (asgnIdx == -1) {
-        System.out.println(token);
         return symbol("Word", ParserSym.Word, token);
       }
       String name = token.substring(0, asgnIdx);
