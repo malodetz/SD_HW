@@ -9,13 +9,16 @@ terminal AssignmentWord, Word, StringLiteral;
 nonterminal Assignment, AssignmentsList;
 nonterminal Argument, ArgumentsList;
 nonterminal Function, FunctionCall;
-nonterminal SimpleCommand;
+nonterminal EnvSetup, EnvFunctionCall;
+nonterminal SingleCommand;
 
-start with SimpleCommand;
+start with SingleCommand;
 
-SimpleCommand ::= AssignmentsList:assign FunctionCall:func {: RESULT = new ASTNodeSingleCommand((ASTNodeAssignmentsList) assign, (ASTNodeFunctionCall) func); :}
-                | AssignmentsList:assign {: RESULT = new ASTNodeSingleCommand((ASTNodeAssignmentsList) assign, null); :}
-                ;
+SingleCommand ::= EnvSetup:env {: RESULT = (ASTNode) env; :}
+                | EnvFunctionCall:envFunc {: RESULT = (ASTNode) envFunc; :};
+
+EnvSetup ::= AssignmentsList:assign {: RESULT = new ASTNodeEnvSetup((ASTNodeAssignmentsList) assign); :};
+EnvFunctionCall ::= AssignmentsList:assign FunctionCall:func {: RESULT = new ASTNodeEnvFunctionCall((ASTNodeAssignmentsList) assign, (ASTNodeFunctionCall) func); :};
 
 Assignment ::= AssignmentWord:assign {:
              String headString = (String) assign;

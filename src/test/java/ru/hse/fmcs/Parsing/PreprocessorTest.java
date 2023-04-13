@@ -1,9 +1,8 @@
-package ru.hse.fmcs;
+package ru.hse.fmcs.Parsing;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import ru.hse.fmcs.Core.Environment;
-import ru.hse.fmcs.Parsing.Preprocessor;
 
 public class PreprocessorTest {
   private Environment env;

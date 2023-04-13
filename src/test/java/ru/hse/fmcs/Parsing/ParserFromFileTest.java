@@ -1,11 +1,8 @@
-package ru.hse.fmcs;
+package ru.hse.fmcs.Parsing;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-import ru.hse.fmcs.Parsing.AST;
-import ru.hse.fmcs.Parsing.ASTConstructor;
-import ru.hse.fmcs.Parsing.ParsingException;
 
 import java.io.FileInputStream;
 import java.io.IOException;
