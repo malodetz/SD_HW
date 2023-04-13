@@ -4,21 +4,31 @@ import ru.hse.fmcs.Parsing.ASTNode.*;
 
 class Parser;
 
-terminal AssignmentWord, Word, StringLiteral;
+terminal AssignmentWord, Word, StringLiteral, Pipe;
 
 nonterminal Assignment, AssignmentsList;
 nonterminal Argument, ArgumentsList;
 nonterminal Function, FunctionCall;
 nonterminal EnvSetup, EnvFunctionCall;
-nonterminal SingleCommand;
+nonterminal SingleCommand, PipedCommand, CompoundCommand;
 
-start with SingleCommand;
+start with CompoundCommand;
+
+CompoundCommand ::= PipedCommand:piped {: RESULT = piped; :}
+                  | {: RESULT = new ASTNodeEmpty(); :}
+                  ;
+
+PipedCommand ::= SingleCommand:cmd {: RESULT = new ASTNodePipedCommands((ASTNode) cmd, null); :}
+               | SingleCommand:head Pipe PipedCommand:tail {: RESULT = new ASTNodePipedCommands((ASTNode) head, (ASTNodePipedCommands) tail); :}
+               ;
 
 SingleCommand ::= EnvSetup:env {: RESULT = (ASTNode) env; :}
                 | EnvFunctionCall:envFunc {: RESULT = (ASTNode) envFunc; :};
 
 EnvSetup ::= AssignmentsList:assign {: RESULT = new ASTNodeEnvSetup((ASTNodeAssignmentsList) assign); :};
-EnvFunctionCall ::= AssignmentsList:assign FunctionCall:func {: RESULT = new ASTNodeEnvFunctionCall((ASTNodeAssignmentsList) assign, (ASTNodeFunctionCall) func); :};
+EnvFunctionCall ::= AssignmentsList:assign FunctionCall:func {: RESULT = new ASTNodeEnvFunctionCall((ASTNodeAssignmentsList) assign, (ASTNodeFunctionCall) func); :}
+                  | FunctionCall:func {: RESULT = func; :}
+                  ;
 
 Assignment ::= AssignmentWord:assign {:
              String headString = (String) assign;
@@ -27,11 +37,8 @@ Assignment ::= AssignmentWord:assign {:
              String value = headString.substring(asgnIdx + 1);
              RESULT = new ASTNodeAssignment(name, value);
             :};
-AssignmentsList ::= Assignment:head AssignmentsList:tail {:
-                RESULT = new ASTNodeAssignmentsList((ASTNodeAssignment) head, (ASTNodeAssignmentsList) tail);
-              :}
-              | {: RESULT = null; :}
-              ;
+AssignmentsList ::= Assignment:head AssignmentsList:tail {: RESULT = new ASTNodeAssignmentsList((ASTNodeAssignment) head, (ASTNodeAssignmentsList) tail); :}
+              | Assignment:head {: RESULT = new ASTNodeAssignmentsList((ASTNodeAssignment) head, null); :};
 
 Function ::= Word:name {: RESULT = name; :}
            | StringLiteral:name {: RESULT = name; :} ;

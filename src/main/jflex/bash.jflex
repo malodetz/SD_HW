@@ -31,7 +31,8 @@ import java_cup.runtime.*;
 
 NewLine = \r|\n|\r\n
 WhiteSpace = \s
-Word = [^\s\"\']+
+Word = [^\|\s\"\']+
+Pipe = \|
 
 %state SINGLE_QUOTED_STRING, DOUBLE_QUOTED_STRING
 
@@ -55,6 +56,7 @@ Word = [^\s\"\']+
     \' { string.setLength(0); yybegin(SINGLE_QUOTED_STRING); }
 
     { WhiteSpace } {}
+    { Pipe } { return symbol("Pipe", ParserSym.Pipe, yytext()); }
 }
 
 <DOUBLE_QUOTED_STRING> {

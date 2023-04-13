@@ -121,4 +121,36 @@ public class ParserFromFileTest {
     }
   }
 
+  @Test
+  public void pipedCmdTest() {
+    prepareInputStream("Parsing/PipedCmd.txt");
+    ASTConstructor parser = new ASTConstructor(is);
+    try {
+      AST ast = parser.consumeInput();
+      Assertions.assertEquals("echo(a, b, c, d) | cat() | cat() | cat()", ast.toString());
+    } catch (ParsingException e) {
+      Assertions.assertNull(e);
+    }
+  }
+
+  @Test
+  public void incorrectPipedCmdTest() {
+    prepareInputStream("Parsing/IncorrectPipedCmd.txt");
+    ASTConstructor parser = new ASTConstructor(is);
+    Assertions.assertThrows(ParsingException.class, parser::consumeInput);
+  }
+
+  @Test
+  public void multiplePipedCmdTest() {
+    prepareInputStream("Parsing/MultiplePipedCmd.txt");
+    ASTConstructor parser = new ASTConstructor(is);
+    try {
+      AST ast = parser.consumeInput();
+      Assertions.assertEquals("[a = 10, b = 20] echo(a) | cat() | echo() | cat() | cat() | echo(10) | [a = 10] | [c = 10] cat() | echo(c)", ast.toString());
+    } catch (ParsingException e) {
+      Assertions.assertNull(e);
+    }
+  }
+
+
 }
