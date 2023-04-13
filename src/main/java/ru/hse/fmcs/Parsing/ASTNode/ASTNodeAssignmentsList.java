@@ -2,8 +2,11 @@ package ru.hse.fmcs.Parsing.ASTNode;
 
 public class ASTNodeAssignmentsList extends ASTNode {
   public ASTNodeAssignmentsList(final ASTNodeAssignment head, final ASTNodeAssignmentsList tail) {
+    assert (head != null);
     children.add(head);
-    children.add(tail);
+    if (tail != null) {
+      children.add(tail);
+    }
   }
 
   public ASTNodeAssignment head() {
@@ -11,6 +14,9 @@ public class ASTNodeAssignmentsList extends ASTNode {
   }
 
   public ASTNodeAssignmentsList tail() {
+    if (children.size() != 2) {
+      return null;
+    }
     return (ASTNodeAssignmentsList) children.get(1);
   }
 

@@ -3,8 +3,11 @@ package ru.hse.fmcs.Parsing.ASTNode;
 public class ASTNodeArgumentsList extends ASTNode {
 
   public ASTNodeArgumentsList(final ASTNodeArgument head, final ASTNodeArgumentsList tail) {
+    assert (head != null);
     children.add(head);
-    children.add(tail);
+    if (tail != null) {
+      children.add(tail);
+    }
   }
 
   public ASTNodeArgument head() {
@@ -12,7 +15,10 @@ public class ASTNodeArgumentsList extends ASTNode {
   }
 
   public ASTNodeArgumentsList tail() {
-    return (ASTNodeArgumentsList) children.get(1);
+    if (children.size() == 2) {
+      return (ASTNodeArgumentsList) children.get(1);
+    }
+    return null;
   }
 
   @Override

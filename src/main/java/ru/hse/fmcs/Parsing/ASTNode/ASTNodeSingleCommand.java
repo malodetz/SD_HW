@@ -3,7 +3,9 @@ package ru.hse.fmcs.Parsing.ASTNode;
 public class ASTNodeSingleCommand extends ASTNode {
   public ASTNodeSingleCommand(final ASTNodeAssignmentsList assign, final ASTNodeFunctionCall func) {
     children.add(assign);
-    children.add(func);
+    if (func != null) {
+      children.add(func);
+    }
   }
 
   public ASTNodeAssignmentsList assign() {
@@ -11,6 +13,9 @@ public class ASTNodeSingleCommand extends ASTNode {
   }
 
   public ASTNodeFunctionCall func() {
+    if (children.size() != 2) {
+      return null;
+    }
     return (ASTNodeFunctionCall) children.get(1);
   }
 

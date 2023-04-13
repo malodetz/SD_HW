@@ -15,7 +15,7 @@ import java.nio.file.Paths;
 
 import static org.junit.jupiter.api.Assertions.fail;
 
-public class ParserTest {
+public class ParserFromFileTest {
   private final Path resourceDirectory = Paths.get("src", "test", "resources");
   private InputStream is;
 
