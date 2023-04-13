@@ -1,7 +1,7 @@
 package ru.hse.fmcs.Parsing.ASTNode;
 
 public class ASTNodeFunctionCall extends ASTNode {
-  final String functionName;
+  public final String functionName;
 
   public ASTNodeFunctionCall(final String functionName, final ASTNodeArgumentsList args) {
     children.add(args);

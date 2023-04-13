@@ -8,10 +8,10 @@ public class ASTNodeEnvSetup extends ASTNode {
   }
 
   public ASTNodeAssignmentsList assign() {
-    if (children.size() == 1) {
-      return (ASTNodeAssignmentsList) children.get(0);
+    if (children.size() != 1) {
+      return null;
     }
-    return null;
+    return (ASTNodeAssignmentsList) children.get(0);
   }
 
   @Override

@@ -3,9 +3,10 @@ package ru.hse.fmcs.AST;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import ru.hse.fmcs.Parsing.AST;
-import ru.hse.fmcs.Parsing.ASTNode.ASTNode;
-import ru.hse.fmcs.Parsing.ASTNode.ASTNodeArgument;
-import ru.hse.fmcs.Parsing.ASTNode.ASTNodeArgumentsList;
+import ru.hse.fmcs.Parsing.ASTNode.*;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class ASTIteratorTest {
   @Test
@@ -28,5 +29,30 @@ public class ASTIteratorTest {
     Assertions.assertEquals("left; right; right; left, right", builder.toString());
   }
 
+  @Test
+  public void TestEnvSetup() {
+    ASTNodeAssignment assignA = new ASTNodeAssignment("a", "10");
+    ASTNodeAssignment assignB = new ASTNodeAssignment("b", "20");
+    ASTNodeAssignment assignC = new ASTNodeAssignment("c", "30");
+    ASTNodeAssignment assignD = new ASTNodeAssignment("d", "40");
 
+    ASTNodeAssignmentsList list = new ASTNodeAssignmentsList(assignA, null);
+    list = new ASTNodeAssignmentsList(assignB, list);
+    list = new ASTNodeAssignmentsList(assignC, list);
+    list = new ASTNodeAssignmentsList(assignD, list);
+
+    ASTNodeEnvSetup envSetup = new ASTNodeEnvSetup(list);
+    int iterationsCount = 0;
+    List<String> keys = new ArrayList<>();
+
+    for (ASTNode node : envSetup) {
+      if (node instanceof ASTNodeAssignment castedNode) {
+        keys.add(castedNode.name);
+      }
+      iterationsCount++;
+    }
+
+    Assertions.assertIterableEquals(List.of("d", "c", "b", "a"), keys);
+    Assertions.assertEquals(9, iterationsCount);
+  }
 }
