@@ -21,7 +21,7 @@ public class ASTConstructor {
    */
   private final Parser parser;
 
-  public ASTConstructor(InputStream is) {
+  public ASTConstructor(final InputStream is) {
     final SymbolFactory sf = new ComplexSymbolFactory();
     final Lexer lexer = new Lexer(new InputStreamReader(is), sf);
     parser = new Parser(lexer, sf);

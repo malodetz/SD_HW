@@ -1,5 +1,8 @@
 package ru.hse.fmcs.Parsing.ASTNode;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class ASTNodeArgumentsList extends ASTNode {
 
   public ASTNodeArgumentsList(final ASTNodeArgument head, final ASTNodeArgumentsList tail) {
@@ -19,6 +22,14 @@ public class ASTNodeArgumentsList extends ASTNode {
       return (ASTNodeArgumentsList) children.get(1);
     }
     return null;
+  }
+
+  public List<ASTNodeArgument> argsList() {
+    List<ASTNodeArgument> result = new ArrayList<>();
+    for (ASTNodeArgumentsList argsList = this; argsList != null; argsList = argsList.tail()) {
+      result.add(argsList.head());
+    }
+    return result;
   }
 
   @Override

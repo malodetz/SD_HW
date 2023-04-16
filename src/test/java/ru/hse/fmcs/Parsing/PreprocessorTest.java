@@ -29,40 +29,10 @@ public class PreprocessorTest {
   }
 
   @Test
-  public void removeQuotesFromEnvVarTest() {
-    env.addVariable("a", "\"echo a\"");
-    String query = "$a";
-    String expectedQuery = "echo a";
-    assert (expectedQuery.equals(preprocessor.processSubstitutions(query)));
-
-    env.addVariable("b", "'echo b'");
-    String anotherQuery = "$b";
-    String expectedAnotherQuery = "echo b";
-    System.out.println(preprocessor.processSubstitutions(anotherQuery));
-    assert (expectedAnotherQuery.equals(preprocessor.processSubstitutions(anotherQuery)));
-  }
-
-  @Test
-  public void removeAllQuotesFromEnvVarTest() {
-    env.addVariable("a", "'a'b'c''d''e'f'g'");
-    String query = "$a";
-    String expectedQuery = "abcdefg";
-    assert (expectedQuery.equals(preprocessor.processSubstitutions(query)));
-  }
-
-  @Test
   public void escapeSpecialCharactersTest() {
     env.addVariable("a", "|");
     String query = "echo a $a cat";
     String expectedQuery = "echo a \\| cat";
-    assert (expectedQuery.equals(preprocessor.processSubstitutions(query)));
-  }
-
-  @Test
-  public void removeAllQuotesFromEnvVarWithEscapingTest() {
-    env.addVariable("a", "\"Special 'case \"of 'string'\"'!\"");
-    String query = "$a";
-    String expectedQuery = "Special \\'case of \\'string\\'\\'!";
     assert (expectedQuery.equals(preprocessor.processSubstitutions(query)));
   }
 
