@@ -41,7 +41,7 @@ public class ASTIteratorTest {
     list = new ASTNodeAssignmentsList(assignC, list);
     list = new ASTNodeAssignmentsList(assignD, list);
 
-    ASTNodeEnvSetup envSetup = new ASTNodeEnvSetup(list);
+    ASTNodeVarDecl envSetup = new ASTNodeVarDecl(list);
     int iterationsCount = 0;
     List<String> keys = new ArrayList<>();
 

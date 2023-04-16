@@ -9,55 +9,14 @@ import java.util.regex.Pattern;
  * Responsible for taking current environment and
  * making a substitution at all occurrences of "$"
  * followed by variable name. This is stateful entity
- * as it should track enviroment variables.
+ * as it should track environment variables.
  *
  * @author sergey
  */
 public class Preprocessor {
   /* Matches all entries of "$" followed by non-space symbols. */
-  static private final Pattern substitutionPattern = Pattern.compile("\\$[a-zA-Z_]\\w*");
+  static private final Pattern substitutionPattern = Pattern.compile("\\$[a-zA-Z_][a-z_A-Z0-9]*");
   private final Environment environment;
-
-  /**
-   * Receive value of environment variable and removes quotes from the
-   * if so exist at the beginning and the end. Additionally, escape special
-   * symbols (like a `'`, `"`, and so on).
-   *
-   * @param key name of environment variable
-   * @return evaluated string
-   * @author sergey
-   */
-  private String getEnvVariableForSubstitution(final String key) {
-    StringBuilder result = new StringBuilder();
-    String envValue = environment.getVariable(key);
-
-    char quote = 0;
-    if (envValue.startsWith("\"")) {
-      quote = '"';
-    } else if (envValue.startsWith("'")) {
-      quote = '\'';
-    }
-
-    for (char symbol : envValue.toCharArray()) {
-      if (quote != 0 && symbol == quote) {
-        continue;
-      }
-      result.append(symbol);
-    }
-
-    return result.toString();
-  }
-
-  private String escapeSpecialSymbols(final String command) {
-    StringBuilder result = new StringBuilder();
-    for (int index = 0; index < command.length(); ++index) {
-      if (command.charAt(index) == '\'' || command.charAt(index) == '"' || command.charAt(index) == '\\') {
-        result.append('\\');
-      }
-      result.append(command.charAt(index));
-    }
-    return result.toString();
-  }
 
   public Preprocessor(final Environment environment) {
     this.environment = environment;
@@ -110,7 +69,7 @@ public class Preprocessor {
 
       result.append(command, lastNonWrittenIndex, matchBeginIndex);
       if (firstSingleQuote == -1 || (firstDoubleQuote < firstSingleQuote && firstDoubleQuote != -1)) {
-        result.append(getEnvVariableForSubstitution(command.substring(matchBeginIndex + 1, matchEndIndex)));
+        result.append(environment.getVariable(command.substring(matchBeginIndex + 1, matchEndIndex)));
       } else {
         result.append(command, matchBeginIndex, matchEndIndex);
       }

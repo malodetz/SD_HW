@@ -146,11 +146,21 @@ public class ParserFromFileTest {
     ASTConstructor parser = new ASTConstructor(is);
     try {
       AST ast = parser.consumeInput();
-      Assertions.assertEquals("[a = 10, b = 20] echo(a) | cat() | echo() | cat() | cat() | echo(10) | [a = 10] | [c = 10] cat() | echo(c)", ast.toString());
+      Assertions.assertEquals("[a = 10, b = 20] echo(\"a\") | cat() | echo() | cat() | cat() | echo(10) | [a = 10] | [c = 10] cat() | echo(c)", ast.toString());
     } catch (ParsingException e) {
       Assertions.assertNull(e);
     }
   }
 
-
+  @Test
+  public void complexTokenTest() {
+    prepareInputStream("Parsing/ComplexToken.txt");
+    ASTConstructor parser = new ASTConstructor(is);
+    try {
+      AST ast = parser.consumeInput();
+      Assertions.assertEquals("echo(\"aba\"caba) | 'cat'()", ast.toString());
+    } catch (ParsingException e) {
+      Assertions.assertNull(e);
+    }
+  }
 }

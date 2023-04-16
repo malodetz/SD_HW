@@ -1,7 +1,7 @@
 package ru.hse.fmcs.Parsing.ASTNode;
 
-public class ASTNodeEnvSetup extends ASTNode {
-  public ASTNodeEnvSetup(final ASTNodeAssignmentsList assign) {
+public class ASTNodeVarDecl extends ASTNode {
+  public ASTNodeVarDecl(final ASTNodeAssignmentsList assign) {
     if (assign != null) {
       children.add(assign);
     }
