@@ -36,10 +36,13 @@ public class Interpreter {
    * @param pipedCommands "list" of piped commands.
    */
   private void executeCompoundCommands(final ASTNodePipedCommands pipedCommands) throws UnexpectedFunctionName, IOException, ExitException, FunctionCallException {
+
     final List<ASTNode> commands = pipedCommands.toList();
     for (var command : commands) {
       String result = executeCommand(command);
-      System.out.println(result);
+      if (result != null) {
+        System.out.println(result);
+      }
     }
   }
 
@@ -63,7 +66,7 @@ public class Interpreter {
         environment.addVariable(Preprocessor.removeQuotes(assign.name), Preprocessor.removeQuotes(assign.value));
       }
     }
-    return "";
+    return null;
   }
 
   /**

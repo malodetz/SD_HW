@@ -1,6 +1,7 @@
 package ru.hse.fmcs.Core;
 
 import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @author sergey
@@ -39,5 +40,13 @@ public class Environment {
       return environmentVariables.get(variable);
     }
     return localVariables.getOrDefault(variable, "");
+  }
+
+  public Map<String, String> envToMap() {
+    return new HashMap<>(environmentVariables);
+  }
+
+  public Map<String, String> localToMap() {
+    return new HashMap<>(localVariables);
   }
 }
