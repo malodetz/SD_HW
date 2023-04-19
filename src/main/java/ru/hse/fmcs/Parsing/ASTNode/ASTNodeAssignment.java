@@ -1,6 +1,6 @@
 package ru.hse.fmcs.Parsing.ASTNode;
 
-public class ASTNodeAssignment extends ASTNode {
+public class ASTNodeAssignment implements ASTNode {
   public final String name;
   public final String value;
 

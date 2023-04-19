@@ -5,10 +5,9 @@ import org.junit.jupiter.api.Test;
 import ru.hse.fmcs.Parsing.AST;
 import ru.hse.fmcs.Parsing.ASTNode.*;
 
-import java.util.ArrayList;
 import java.util.List;
 
-public class ASTIteratorTest {
+public class ASTTest {
   @Test
   public void TestIteratorSimple() {
     ASTNodeArgument left = new ASTNodeArgument("left");
@@ -16,17 +15,7 @@ public class ASTIteratorTest {
     ASTNodeArgumentsList list = new ASTNodeArgumentsList(right, null);
     list = new ASTNodeArgumentsList(left, list);
     AST ast = new AST(list);
-    StringBuilder builder = new StringBuilder();
-    boolean firstIteration = true;
-    for (ASTNode node : ast) {
-      if (!firstIteration) {
-        builder.append("; ");
-      }
-      firstIteration = false;
-      builder.append(node.toString());
-    }
-
-    Assertions.assertEquals("left; right; right; left, right", builder.toString());
+    Assertions.assertEquals("left, right", ast.toString());
   }
 
   @Test
@@ -41,18 +30,8 @@ public class ASTIteratorTest {
     list = new ASTNodeAssignmentsList(assignC, list);
     list = new ASTNodeAssignmentsList(assignD, list);
 
-    ASTNodeVarDecl envSetup = new ASTNodeVarDecl(list);
-    int iterationsCount = 0;
-    List<String> keys = new ArrayList<>();
+    ASTNodeVarDecl varDecl = new ASTNodeVarDecl(list);
 
-    for (ASTNode node : envSetup) {
-      if (node instanceof ASTNodeAssignment castedNode) {
-        keys.add(castedNode.name);
-      }
-      iterationsCount++;
-    }
-
-    Assertions.assertIterableEquals(List.of("d", "c", "b", "a"), keys);
-    Assertions.assertEquals(9, iterationsCount);
+    Assertions.assertIterableEquals(List.of("d = 40", "c = 30", "b = 20", "a = 10"), varDecl.declarations().stream().map(ASTNodeAssignment::toString).toList());
   }
 }

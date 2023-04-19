@@ -2,9 +2,7 @@ package ru.hse.fmcs;
 
 import ru.hse.fmcs.Core.Interpreter;
 
-import java.io.BufferedInputStream;
-import java.io.IOException;
-import java.nio.charset.StandardCharsets;
+import java.util.Scanner;
 
 public class Main {
   public static void main(String[] args) {
@@ -15,15 +13,9 @@ public class Main {
      */
 
     Interpreter interpreter = new Interpreter();
-    while (true) {
-      BufferedInputStream bufReader = new BufferedInputStream(System.in);
-      try {
-        String query = new String(bufReader.readAllBytes(), StandardCharsets.UTF_8);
-        interpreter.executeCommand(query);
-      } catch (IOException exception) {
-        exception.printStackTrace();
-        break;
-      }
+    Scanner scanner = new Scanner(System.in);
+    while (scanner.hasNextLine()) {
+      interpreter.execute(scanner.nextLine());
     }
   }
 }

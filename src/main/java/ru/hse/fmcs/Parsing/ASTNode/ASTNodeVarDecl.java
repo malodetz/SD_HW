@@ -1,24 +1,23 @@
 package ru.hse.fmcs.Parsing.ASTNode;
 
-public class ASTNodeVarDecl extends ASTNode {
+import java.util.List;
+
+public class ASTNodeVarDecl implements ASTNode {
+  private final ASTNodeAssignmentsList assign;
+
   public ASTNodeVarDecl(final ASTNodeAssignmentsList assign) {
-    if (assign != null) {
-      children.add(assign);
-    }
+    this.assign = assign;
   }
 
-  public ASTNodeAssignmentsList assign() {
-    if (children.size() != 1) {
-      return null;
-    }
-    return (ASTNodeAssignmentsList) children.get(0);
+  public List<ASTNodeAssignment> declarations() {
+    return assign.toList();
   }
 
   @Override
   public String toString() {
-    if (assign() == null) {
+    if (assign == null) {
       return "";
     }
-    return "[" + assign().toString() + "]";
+    return "[" + assign.toString() + "]";
   }
 }

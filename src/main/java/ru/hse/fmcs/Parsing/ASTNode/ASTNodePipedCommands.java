@@ -1,29 +1,30 @@
 package ru.hse.fmcs.Parsing.ASTNode;
 
-public class ASTNodePipedCommands extends ASTNode {
+import java.util.ArrayList;
+import java.util.List;
+
+public class ASTNodePipedCommands implements ASTNode {
+  private final ASTNode head;
+  private final ASTNodePipedCommands tail;
+
   public ASTNodePipedCommands(final ASTNode head, final ASTNodePipedCommands tail) {
-    children.add(head);
-    if (tail != null) {
-      children.add(tail);
-    }
+    this.head = head;
+    this.tail = tail;
   }
 
-  public ASTNode head() {
-    return children.get(0);
-  }
-
-  public ASTNodePipedCommands tail() {
-    if (children.size() != 2) {
-      return null;
+  public List<ASTNode> toList() {
+    List<ASTNode> result = new ArrayList<>();
+    for (ASTNodePipedCommands commandIterator = this; commandIterator != null; commandIterator = commandIterator.tail) {
+      result.add(commandIterator.head);
     }
-    return (ASTNodePipedCommands) children.get(1);
+    return result;
   }
 
   @Override
   public String toString() {
-    if (tail() != null) {
-      return head().toString() + " | " + tail().toString();
+    if (tail != null) {
+      return head.toString() + " | " + tail.toString();
     }
-    return head().toString();
+    return head.toString();
   }
 }

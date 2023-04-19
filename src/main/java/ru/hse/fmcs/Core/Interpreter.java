@@ -28,42 +28,53 @@ public class Interpreter {
   }
 
   /**
-   * Evaluate function traverses through received AST. AST
-   * represents set of commands, nested or connected via pipe.
-   * Therefore, it needs to maintain a correct order for commands
-   * evaluation: firstly execute most nested commands.
-   * Commands located on one level must be executed from left
-   * to right (in order of arguments of parent ASTNode).
+   * Prepares commands from pipe and executes
+   * them in separate threads. Output from the first
+   * command forwarded to the input of the second
+   * command.
    *
-   * @param tree AST representation of command
+   * @param pipedCommands "list" of piped commands.
    */
-  public void evaluate(final AST tree) {
-    for (ASTNode node : tree) {
-      if (node instanceof ASTNodeFunctionCall functionCall) {
-        String functionName = functionCall.functionName;
-        List<String> arguments = functionCall.args().argsList().stream().map(ASTNodeArgument::toString).toList();
-        functionCaller.HandleFunction(new Query(functionName, arguments));
-      } else if (node instanceof ASTNodeEnvFunctionCall envFunctionCall) {
-        List<ASTNodeAssignment> assignments = envFunctionCall.assign().assignmentsToList();
-        Environment modifiedEnvironment = new Environment(environment);
-        for (var assign : assignments) {
-          modifiedEnvironment.exportVariable(assign.name, assign.value);
-        }
-        String functionName = envFunctionCall.func().functionName;
-        List<String> arguments = envFunctionCall.func().args().argsList().stream().map(ASTNodeArgument::toString).toList();
-        functionCaller.HandleFunction(new Query(functionName, arguments));
-      } else if (node instanceof ASTNodeVarDecl varDecl) {
-        List<ASTNodeAssignment> assignments = varDecl.assign().assignmentsToList();
-        for (var assign : assignments) {
-          environment.addVariable(assign.name, assign.value);
-        }
-      } else if (node instanceof ASTNodePipedCommands nodePipedCommands) {
-
-      }
+  private void executeCompoundCommands(final ASTNodePipedCommands pipedCommands) {
+    final List<ASTNode> commands = pipedCommands.toList();
+    for (var command : commands) {
+      executeCommand(command);
     }
   }
 
-  public void executeCommand(final String query) {
+  private String executeCommand(final ASTNode command) {
+    if (command instanceof ASTNodeFunctionCall functionCall) {
+      String functionName = functionCall.functionName;
+      List<String> arguments = functionCall.argumentsList().stream().map(ASTNodeArgument::toString).toList();
+      return functionCaller.HandleFunction(new Query(functionName, arguments));
+      // TODO: wrap result and return
+    } else if (command instanceof ASTNodeEnvFunctionCall envFunctionCall) {
+      List<ASTNodeAssignment> assignments = envFunctionCall.assignmentList();
+      Environment modifiedEnvironment = new Environment(environment);
+      for (var assign : assignments) {
+        modifiedEnvironment.exportVariable(assign.name, assign.value);
+      }
+      String functionName = envFunctionCall.function.functionName;
+      List<String> arguments = envFunctionCall.function.argumentsList().stream().map(ASTNodeArgument::toString).toList();
+      return functionCaller.HandleFunction(new Query(functionName, arguments));
+      // TODO: wrap result and return
+    } else if (command instanceof ASTNodeVarDecl varDecl) {
+      List<ASTNodeAssignment> assignments = varDecl.declarations();
+      for (var assign : assignments) {
+        environment.addVariable(assign.name, assign.value);
+      }
+    }
+    return null;
+  }
+
+  /**
+   * Processes substitutions in given string query, tokenizes
+   * and parses it. Then removes quotes and forms the query
+   * to a function caller. Receives result and passes it back.
+   *
+   * @param query
+   */
+  public void execute(final String query) {
     String preparedQuery = preprocessor.processSubstitutions(query);
 
     ByteArrayInputStream is = new ByteArrayInputStream(preparedQuery.getBytes());
@@ -71,7 +82,13 @@ public class Interpreter {
 
     try {
       AST ast = constructor.consumeInput();
-      evaluate(ast);
+      if (ast.root instanceof ASTNodePipedCommands pipedCommands) {
+        executeCompoundCommands(pipedCommands);
+      } else {
+        // TODO: remove
+        System.err.println("This should not happen");
+        assert false;
+      }
     } catch (ParsingException exception) {
       exception.printStackTrace();
       System.exit(1);

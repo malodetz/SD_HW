@@ -8,8 +8,8 @@ import java.util.HashMap;
  * takes current system enviroment.
  */
 public class Environment {
-  private HashMap<String, String> environmentVariables;
-  private HashMap<String, String> localVariables;
+  private final HashMap<String, String> environmentVariables;
+  private final HashMap<String, String> localVariables;
 
   public Environment() {
     environmentVariables = new HashMap<>(System.getenv());
@@ -17,8 +17,8 @@ public class Environment {
   }
 
   public Environment(final Environment env) {
-    Environment clone = new Environment();
-    clone.environmentVariables = new HashMap<>(env.environmentVariables);
+    environmentVariables = new HashMap<>(env.environmentVariables);
+    localVariables = new HashMap<>();
   }
 
   public void exportVariable(final String variable, final String value) {
