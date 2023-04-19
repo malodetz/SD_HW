@@ -79,4 +79,44 @@ public class Preprocessor {
     result.append(command, lastNonWrittenIndex, command.length());
     return result.toString();
   }
+
+  public static String removeQuotes(String token) {
+    StringBuilder builder = new StringBuilder();
+
+    int firstSingleQuote = -1;
+    int firstDoubleQuote = -1;
+
+    for (int innerIndex = 0; innerIndex < token.length(); ++innerIndex) {
+      switch (token.charAt(innerIndex)) {
+        case '\\' -> {
+          builder.append(token.charAt(innerIndex));
+          ++innerIndex;
+        }
+        case '\'' -> {
+          if (firstSingleQuote == -1) {
+            if (firstDoubleQuote == -1) {
+              firstSingleQuote = innerIndex;
+              continue;
+            }
+          } else {
+            firstSingleQuote = -1;
+            continue;
+          }
+        }
+        case '"' -> {
+          if (firstDoubleQuote == -1) {
+            if (firstSingleQuote == -1) {
+              firstDoubleQuote = innerIndex;
+              continue;
+            }
+          } else {
+            firstDoubleQuote = -1;
+            continue;
+          }
+        }
+      }
+      builder.append(token.charAt(innerIndex));
+    }
+    return builder.toString();
+  }
 }

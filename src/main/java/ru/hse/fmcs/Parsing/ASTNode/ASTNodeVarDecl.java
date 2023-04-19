@@ -1,5 +1,6 @@
 package ru.hse.fmcs.Parsing.ASTNode;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class ASTNodeVarDecl implements ASTNode {
@@ -10,6 +11,9 @@ public class ASTNodeVarDecl implements ASTNode {
   }
 
   public List<ASTNodeAssignment> declarations() {
+    if (assign == null) {
+      return new ArrayList<>();
+    }
     return assign.toList();
   }
 

@@ -1,5 +1,6 @@
 package ru.hse.fmcs.Parsing.ASTNode;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class ASTNodeEnvFunctionCall implements ASTNode {
@@ -12,6 +13,9 @@ public class ASTNodeEnvFunctionCall implements ASTNode {
   }
 
   public List<ASTNodeAssignment> assignmentList() {
+    if (assignment == null) {
+      return new ArrayList<>();
+    }
     return assignment.toList();
   }
 

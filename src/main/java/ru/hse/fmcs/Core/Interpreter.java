@@ -23,7 +23,7 @@ public class Interpreter {
 
   public Interpreter() {
     environment = new Environment();
-    functionCaller = null;
+    functionCaller = new FunctionCaller();
     preprocessor = new Preprocessor(environment);
   }
 
@@ -35,36 +35,35 @@ public class Interpreter {
    *
    * @param pipedCommands "list" of piped commands.
    */
-  private void executeCompoundCommands(final ASTNodePipedCommands pipedCommands) throws UnexpectedFunctionName, WrongArgumentsException, IOException, ExitException {
+  private void executeCompoundCommands(final ASTNodePipedCommands pipedCommands) throws UnexpectedFunctionName, IOException, ExitException, FunctionCallException {
     final List<ASTNode> commands = pipedCommands.toList();
     for (var command : commands) {
-      executeCommand(command);
+      String result = executeCommand(command);
+      System.out.println(result);
     }
   }
 
-  private String executeCommand(final ASTNode command) throws UnexpectedFunctionName, WrongArgumentsException, IOException, ExitException {
+  private String executeCommand(final ASTNode command) throws UnexpectedFunctionName, IOException, ExitException, FunctionCallException {
     if (command instanceof ASTNodeFunctionCall functionCall) {
       String functionName = functionCall.functionName;
-      List<String> arguments = functionCall.argumentsList().stream().map(ASTNodeArgument::toString).toList();
-      return functionCaller.handleFunction(new Query(functionName, arguments));
-      // TODO: wrap result and return
+      List<String> arguments = functionCall.argumentsList().stream().map(ASTNodeArgument::toString).map(Preprocessor::removeQuotes).toList();
+      return functionCaller.handleFunction(new Query(Preprocessor.removeQuotes(functionName), arguments));
     } else if (command instanceof ASTNodeEnvFunctionCall envFunctionCall) {
       List<ASTNodeAssignment> assignments = envFunctionCall.assignmentList();
       Environment modifiedEnvironment = new Environment(environment);
       for (var assign : assignments) {
-        modifiedEnvironment.exportVariable(assign.name, assign.value);
+        modifiedEnvironment.exportVariable(Preprocessor.removeQuotes(assign.name), Preprocessor.removeQuotes(assign.value));
       }
       String functionName = envFunctionCall.function.functionName;
-      List<String> arguments = envFunctionCall.function.argumentsList().stream().map(ASTNodeArgument::toString).toList();
-      return functionCaller.handleFunction(new Query(functionName, arguments));
-      // TODO: wrap result and return
+      List<String> arguments = envFunctionCall.function.argumentsList().stream().map(ASTNodeArgument::toString).map(Preprocessor::removeQuotes).toList();
+      return functionCaller.handleFunction(new Query(Preprocessor.removeQuotes(functionName), arguments));
     } else if (command instanceof ASTNodeVarDecl varDecl) {
       List<ASTNodeAssignment> assignments = varDecl.declarations();
       for (var assign : assignments) {
-        environment.addVariable(assign.name, assign.value);
+        environment.addVariable(Preprocessor.removeQuotes(assign.name), Preprocessor.removeQuotes(assign.value));
       }
     }
-    return null;
+    return "";
   }
 
   /**
@@ -84,13 +83,9 @@ public class Interpreter {
       AST ast = constructor.consumeInput();
       if (ast.root instanceof ASTNodePipedCommands pipedCommands) {
         executeCompoundCommands(pipedCommands);
-      } else {
-        // TODO: remove
-        System.err.println("This should not happen");
-        assert false;
       }
-    } catch (ParsingException | UnexpectedFunctionName | WrongArgumentsException | IOException |
-             ExitException exception) {
+    } catch (ParsingException | UnexpectedFunctionName | IOException | ExitException |
+             FunctionCallException exception) {
       exception.printStackTrace();
       System.exit(1);
     }
