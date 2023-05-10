@@ -10,16 +10,16 @@ public class WcFunction implements BuiltinFunction {
   @Override
   public int run(Query query) {
     try {
-      long charCount = 0;
+      long bytesCount = 0;
       long linesCount = 0;
       long wordsCount = 0;
 
       int prevSymbol = -1;
 
-      byte[] byteBuffer = new byte[1024];
-      while (query.input.read(byteBuffer) != -1) {
+      byte[] byteBuffer = new byte[BUFFER_SIZE];
+      int readBytes = query.input.read(byteBuffer);
+      while (readBytes != -1) {
         for (byte symbol : byteBuffer) {
-          ++charCount;
           if (Character.isSpaceChar(symbol)) {
             if (Character.isLetter(prevSymbol)) {
               ++wordsCount;
@@ -28,9 +28,11 @@ public class WcFunction implements BuiltinFunction {
           }
           prevSymbol = symbol;
         }
+        bytesCount += readBytes;
+        readBytes = query.input.read(byteBuffer);
       }
 
-      String responseString = String.format("%d %d %d\n", linesCount, wordsCount, charCount);
+      String responseString = String.format("%d %d %d\n", linesCount, wordsCount, bytesCount);
       query.output.write(responseString.getBytes());
     } catch (IOException exception) {
       return 1;

@@ -1,7 +1,5 @@
 package ru.hse.fmcs.Core;
 
-import org.apache.commons.io.input.CloseShieldInputStream;
-import org.apache.commons.io.output.CloseShieldOutputStream;
 import ru.hse.fmcs.FunctionCaller.DefaultFunctionHandler;
 import ru.hse.fmcs.FunctionCaller.ExitException;
 import ru.hse.fmcs.FunctionCaller.FunctionHandler;
@@ -128,15 +126,9 @@ public class Interpreter {
   }
 
   private int executeFunctionCall(ASTNodeFunctionCall node, Environment functionCallEnvironment) throws ExitException {
-    CloseShieldInputStream shieldedInputStream = CloseShieldInputStream.wrap(standardInput);
-    CloseShieldOutputStream shieldedOutputStream = CloseShieldOutputStream.wrap(standardOutput);
-
     List<String> arguments = node.argumentsList().stream().map(ASTNodeArgument::toString).map(Preprocessor::removeQuotes).toList();
     Query query = new Query(Preprocessor.removeQuotes(node.functionName),
-        arguments,
-        shieldedInputStream,
-        shieldedOutputStream,
-        functionCallEnvironment);
+        arguments, standardInput, standardOutput, functionCallEnvironment);
     return functionHandler.handleFunction(query);
   }
 
@@ -148,13 +140,13 @@ public class Interpreter {
    *
    * @param query given string representation of query
    */
-  public void execute(final String query) {
+  public void execute(final String query) throws ExitException {
     ASTBuilder builder = new ASTBuilder(preprocessor.processSubstitutions(query));
 
     try {
       AST ast = builder.build();
       execute(ast.root);
-    } catch (ParsingException | IOException | ExitException exception) {
+    } catch (ParsingException | IOException exception) {
       exception.printStackTrace();
       System.exit(1);
     }

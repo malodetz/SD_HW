@@ -2,6 +2,8 @@ package ru.hse.fmcs;
 
 import ru.hse.fmcs.Core.Environment;
 import ru.hse.fmcs.Core.Interpreter;
+import ru.hse.fmcs.FunctionCaller.ExitException;
+import sun.misc.Signal;
 
 import java.util.Scanner;
 
@@ -13,10 +15,23 @@ public class Main {
      * direct call to "exit" or signal from OS.
      */
 
+    Signal signalSigInt = new Signal("INT");
+    Signal.handle(signalSigInt, (Signal sig) -> {
+      System.out.println();
+      System.out.print("> ");
+    });
+
     Interpreter interpreter = new Interpreter(System.in, System.out, new Environment());
     Scanner scanner = new Scanner(System.in);
+    System.out.print("> ");
     while (scanner.hasNextLine()) {
-      interpreter.execute(scanner.nextLine());
+      try {
+        interpreter.execute(scanner.nextLine());
+      } catch (ExitException exception) {
+        System.exit(0);
+      }
+      System.out.print("> ");
     }
+    System.out.println();
   }
 }
