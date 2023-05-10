@@ -1,7 +1,9 @@
 package ru.hse.fmcs.Core;
 
+import org.apache.commons.io.input.CloseShieldInputStream;
+import org.apache.commons.io.output.CloseShieldOutputStream;
+import ru.hse.fmcs.FunctionCaller.DefaultFunctionHandler;
 import ru.hse.fmcs.FunctionCaller.ExitException;
-import ru.hse.fmcs.FunctionCaller.FunctionCallerInterface;
 import ru.hse.fmcs.FunctionCaller.FunctionHandler;
 import ru.hse.fmcs.FunctionCaller.Query;
 import ru.hse.fmcs.Parsing.AST;
@@ -11,35 +13,37 @@ import ru.hse.fmcs.Parsing.ParsingException;
 import ru.hse.fmcs.Parsing.Preprocessor;
 
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.nio.channels.Channels;
 import java.nio.channels.Pipe;
-import java.nio.channels.ReadableByteChannel;
-import java.nio.channels.WritableByteChannel;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
- * @author sergey
  * Main class that traverse through received Abstract Syntax Tree. Construct commands
  * and pass them to FunctionHandler maintaing the enviroment variables all the time.
  * It can run its own subshells in order to handle subprograms, input substitutions, pipes etc.
+ *
+ * @author sergey
  */
 public class Interpreter {
   final private Environment environment;
-  final private FunctionCallerInterface functionCaller;
+  final private FunctionHandler functionHandler;
   final private Preprocessor preprocessor;
 
-  final private ReadableByteChannel standardInputChannel;
-  final private WritableByteChannel standardOutputChannel;
+  final private InputStream standardInput;
+  final private OutputStream standardOutput;
 
-  public Interpreter(final ReadableByteChannel standardInputChannel,
-                     final WritableByteChannel standardOutputChannel,
+  public Interpreter(final InputStream standardInput,
+                     final OutputStream standardOutput,
                      final Environment environment) {
-    this.standardInputChannel = standardInputChannel;
-    this.standardOutputChannel = standardOutputChannel;
+    this.standardInput = standardInput;
+    this.standardOutput = standardOutput;
     this.environment = environment;
 
     preprocessor = new Preprocessor(environment);
-    functionCaller = new FunctionHandler();
+    functionHandler = new DefaultFunctionHandler();
   }
 
   /**
@@ -54,23 +58,23 @@ public class Interpreter {
     List<ASTNode> pipedCommandsList = pipedCommands.toList();
     List<Thread> threadsCommandsList = new ArrayList<>();
 
-    ReadableByteChannel nextSubInterpreterInputChannel = standardInputChannel;
+    InputStream nextSubInterpreterInput = standardInput;
     for (int i = 0, size = pipedCommandsList.size(); i < size; ++i) {
-      ReadableByteChannel subInterpreterInputChannel = nextSubInterpreterInputChannel;
-      WritableByteChannel subInterpreterOutputChannel = standardOutputChannel;
+      InputStream subInterpreterInput = nextSubInterpreterInput;
+      OutputStream subInterpreterOutput = standardOutput;
 
       // Forward current command stdout to stdin of next command
       // via pipe. Pipes open n-1 times, where `n` is a number of
       // commands in pipeline.
       if (i != size - 1) {
         Pipe pipe = Pipe.open();
-        nextSubInterpreterInputChannel = pipe.source();
-        subInterpreterOutputChannel = pipe.sink();
+        nextSubInterpreterInput = Channels.newInputStream(pipe.source());
+        subInterpreterOutput = Channels.newOutputStream(pipe.sink());
       }
 
       Interpreter subInterpreter = new Interpreter(
-          subInterpreterInputChannel,
-          subInterpreterOutputChannel,
+          subInterpreterInput,
+          subInterpreterOutput,
           new Environment(environment)
       );
 
@@ -82,10 +86,10 @@ public class Interpreter {
         try {
           subInterpreter.execute(commandRoot);
           if (shouldCloseStdin) {
-            subInterpreter.standardInputChannel.close();
+            subInterpreter.standardInput.close();
           }
           if (shouldCloseStdout) {
-            subInterpreter.standardOutputChannel.close();
+            subInterpreter.standardOutput.close();
           }
         } catch (IOException | ExitException exception) {
           exception.printStackTrace();
@@ -108,18 +112,13 @@ public class Interpreter {
 
   private void executeSingleCommand(final ASTNode command) throws IOException, ExitException {
     if (command instanceof ASTNodeFunctionCall functionCall) {
-      String functionName = functionCall.functionName;
-      List<String> arguments = functionCall.argumentsList().stream().map(ASTNodeArgument::toString).map(Preprocessor::removeQuotes).toList();
-      functionCaller.handleFunction(new Query(Preprocessor.removeQuotes(functionName), arguments, standardInputChannel, standardOutputChannel, new Environment(environment)));
+      executeFunctionCall(functionCall, new Environment(environment));
     } else if (command instanceof ASTNodeEnvFunctionCall envFunctionCall) {
-      List<ASTNodeAssignment> assignments = envFunctionCall.assignmentList();
       Environment modifiedEnvironment = new Environment(environment);
-      for (var assign : assignments) {
+      for (var assign : envFunctionCall.assignmentList()) {
         modifiedEnvironment.exportVariable(Preprocessor.removeQuotes(assign.name), Preprocessor.removeQuotes(assign.value));
       }
-      String functionName = envFunctionCall.function.functionName;
-      List<String> arguments = envFunctionCall.function.argumentsList().stream().map(ASTNodeArgument::toString).map(Preprocessor::removeQuotes).toList();
-      functionCaller.handleFunction(new Query(Preprocessor.removeQuotes(functionName), arguments, standardInputChannel, standardOutputChannel, modifiedEnvironment));
+      executeFunctionCall(envFunctionCall.function, modifiedEnvironment);
     } else if (command instanceof ASTNodeVarDecl varDeclaration) {
       List<ASTNodeAssignment> assignments = varDeclaration.declarations();
       for (var assign : assignments) {
@@ -127,6 +126,20 @@ public class Interpreter {
       }
     }
   }
+
+  private int executeFunctionCall(ASTNodeFunctionCall node, Environment functionCallEnvironment) throws ExitException {
+    CloseShieldInputStream shieldedInputStream = CloseShieldInputStream.wrap(standardInput);
+    CloseShieldOutputStream shieldedOutputStream = CloseShieldOutputStream.wrap(standardOutput);
+
+    List<String> arguments = node.argumentsList().stream().map(ASTNodeArgument::toString).map(Preprocessor::removeQuotes).toList();
+    Query query = new Query(Preprocessor.removeQuotes(node.functionName),
+        arguments,
+        shieldedInputStream,
+        shieldedOutputStream,
+        functionCallEnvironment);
+    return functionHandler.handleFunction(query);
+  }
+
 
   /**
    * Processes substitutions in given string query, tokenizes

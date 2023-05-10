@@ -3,13 +3,16 @@ package ru.hse.fmcs.FunctionCaller.BuiltinFunctions;
 import ru.hse.fmcs.FunctionCaller.Query;
 
 import java.io.IOException;
-import java.nio.ByteBuffer;
 
 public class EchoFunction implements BuiltinFunction {
   @Override
-  public void run(final Query query) throws IOException {
-    String responseString = String.join(" ", query.args);
-    ByteBuffer byteBuffer = ByteBuffer.wrap(responseString.getBytes());
-    query.output.write(byteBuffer);
+  public int run(final Query query) {
+    try {
+      String responseString = String.join(" ", query.args) + "\n";
+      query.output.write(responseString.getBytes());
+    } catch (IOException exception) {
+      return 1;
+    }
+    return 0;
   }
 }
