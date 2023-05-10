@@ -40,9 +40,9 @@ public class ParserFromFileTest {
   @Test
   public void echoTest() {
     prepareInputStream("Parsing/Echo.txt");
-    ASTConstructor parser = new ASTConstructor(is);
+    ASTBuilder parser = new ASTBuilder(is);
     try {
-      AST ast = parser.consumeInput();
+      AST ast = parser.build();
       Assertions.assertEquals("echo(a, b, c, d)", ast.toString());
     } catch (ParsingException e) {
       Assertions.assertNull(e);
@@ -52,9 +52,9 @@ public class ParserFromFileTest {
   @Test
   public void envSimpleTest() {
     prepareInputStream("Parsing/EnvSingleVariable.txt");
-    ASTConstructor parser = new ASTConstructor(is);
+    ASTBuilder parser = new ASTBuilder(is);
     try {
-      AST ast = parser.consumeInput();
+      AST ast = parser.build();
       Assertions.assertEquals("[a = abacaba]", ast.toString());
     } catch (ParsingException e) {
       Assertions.assertNull(e);
@@ -64,9 +64,9 @@ public class ParserFromFileTest {
   @Test
   public void envMultipleVariablesTest() {
     prepareInputStream("Parsing/EnvMultipleVariables.txt");
-    ASTConstructor parser = new ASTConstructor(is);
+    ASTBuilder parser = new ASTBuilder(is);
     try {
-      AST ast = parser.consumeInput();
+      AST ast = parser.build();
       Assertions.assertEquals("[a = 10, b = 20, c = 30, d = 0]", ast.toString());
     } catch (ParsingException e) {
       Assertions.assertNull(e);
@@ -76,9 +76,9 @@ public class ParserFromFileTest {
   @Test
   public void envWithCmdWithoutArgsTest() {
     prepareInputStream("Parsing/EnvWithCmdWithoutArgs.txt");
-    ASTConstructor parser = new ASTConstructor(is);
+    ASTBuilder parser = new ASTBuilder(is);
     try {
-      AST ast = parser.consumeInput();
+      AST ast = parser.build();
       Assertions.assertEquals("[a = 10, b = 20] echo()", ast.toString());
     } catch (ParsingException e) {
       Assertions.assertNull(e);
@@ -88,9 +88,9 @@ public class ParserFromFileTest {
   @Test
   public void envWithCmdWithArgsTest() {
     prepareInputStream("Parsing/EnvWithCmdWithArgs.txt");
-    ASTConstructor parser = new ASTConstructor(is);
+    ASTBuilder parser = new ASTBuilder(is);
     try {
-      AST ast = parser.consumeInput();
+      AST ast = parser.build();
       Assertions.assertEquals("[a = 10, b = 20] echo(a, b, c, d)", ast.toString());
     } catch (ParsingException e) {
       Assertions.assertNull(e);
@@ -100,9 +100,9 @@ public class ParserFromFileTest {
   @Test
   public void emptyLineTest() {
     prepareInputStream("Parsing/EmptyLine.txt");
-    ASTConstructor parser = new ASTConstructor(is);
+    ASTBuilder parser = new ASTBuilder(is);
     try {
-      AST ast = parser.consumeInput();
+      AST ast = parser.build();
       Assertions.assertEquals("", ast.toString());
     } catch (ParsingException e) {
       Assertions.assertNull(e);
@@ -112,9 +112,9 @@ public class ParserFromFileTest {
   @Test
   public void incorrectCmdTest() {
     prepareInputStream("Parsing/IncorrectCmd.txt");
-    ASTConstructor parser = new ASTConstructor(is);
+    ASTBuilder parser = new ASTBuilder(is);
     try {
-      AST ast = parser.consumeInput();
+      AST ast = parser.build();
       Assertions.assertEquals("=asd()", ast.toString());
     } catch (ParsingException e) {
       Assertions.assertNull(e);
@@ -124,9 +124,9 @@ public class ParserFromFileTest {
   @Test
   public void pipedCmdTest() {
     prepareInputStream("Parsing/PipedCmd.txt");
-    ASTConstructor parser = new ASTConstructor(is);
+    ASTBuilder parser = new ASTBuilder(is);
     try {
-      AST ast = parser.consumeInput();
+      AST ast = parser.build();
       Assertions.assertEquals("echo(a, b, c, d) | cat() | cat() | cat()", ast.toString());
     } catch (ParsingException e) {
       Assertions.assertNull(e);
@@ -136,16 +136,16 @@ public class ParserFromFileTest {
   @Test
   public void incorrectPipedCmdTest() {
     prepareInputStream("Parsing/IncorrectPipedCmd.txt");
-    ASTConstructor parser = new ASTConstructor(is);
-    Assertions.assertThrows(ParsingException.class, parser::consumeInput);
+    ASTBuilder parser = new ASTBuilder(is);
+    Assertions.assertThrows(ParsingException.class, parser::build);
   }
 
   @Test
   public void multiplePipedCmdTest() {
     prepareInputStream("Parsing/MultiplePipedCmd.txt");
-    ASTConstructor parser = new ASTConstructor(is);
+    ASTBuilder parser = new ASTBuilder(is);
     try {
-      AST ast = parser.consumeInput();
+      AST ast = parser.build();
       Assertions.assertEquals("[a = 10, b = 20] echo(\"a\") | cat() | echo() | cat() | cat() | echo(10) | [a = 10] | [c = 10] cat() | echo(c)", ast.toString());
     } catch (ParsingException e) {
       Assertions.assertNull(e);
@@ -155,9 +155,9 @@ public class ParserFromFileTest {
   @Test
   public void complexTokenTest() {
     prepareInputStream("Parsing/ComplexToken.txt");
-    ASTConstructor parser = new ASTConstructor(is);
+    ASTBuilder parser = new ASTBuilder(is);
     try {
-      AST ast = parser.consumeInput();
+      AST ast = parser.build();
       Assertions.assertEquals("echo(\"aba\"caba) | 'cat'()", ast.toString());
     } catch (ParsingException e) {
       Assertions.assertNull(e);

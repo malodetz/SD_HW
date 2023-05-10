@@ -14,7 +14,8 @@ nonterminal SingleCommand, PipedCommand, CompoundCommand;
 
 start with CompoundCommand;
 
-CompoundCommand ::= PipedCommand:piped {: RESULT = piped; :}
+CompoundCommand ::= SingleCommand:head Pipe PipedCommand:tail {: RESULT = new ASTNodePipedCommands((ASTNode) head, (ASTNodePipedCommands) tail); :}
+                  | SingleCommand:cmd {: RESULT = cmd; :}
                   | {: RESULT = new ASTNodeEmpty(); :}
                   ;
 

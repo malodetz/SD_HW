@@ -8,19 +8,24 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.StringTokenizer;
 
 public class FunctionCaller implements FunctionCallerInterface {
+  final private Map<String, CheckedFunction<Query, String>> functions = new HashMap<>();
+
+
   public FunctionCaller() {
     functions.put("echo", FunctionCaller::echoImplementation);
-    functions.put("cat", FunctionCaller::catImplementation);
-    functions.put("wc", FunctionCaller::wcImplementation);
-    functions.put("pwd", FunctionCaller::pwdImplementation);
-    functions.put("exit", FunctionCaller::exitImplementation);
+//    functions.put("cat", FunctionCaller::catImplementation);
+//    functions.put("wc", FunctionCaller::wcImplementation);
+//    functions.put("pwd", FunctionCaller::pwdImplementation);
+//    functions.put("exit", FunctionCaller::exitImplementation);
   }
 
   @Override
-  public String handleFunction(Query query) throws FunctionCallException, UnexpectedFunctionName, IOException, ExitException {
+  public String handleFunction(Query query) throws IOException, ExitException {
     if (functions.containsKey(query.name)) {
       return functions.get(query.name).apply(query);
     }

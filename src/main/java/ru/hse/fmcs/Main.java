@@ -1,7 +1,9 @@
 package ru.hse.fmcs;
 
+import ru.hse.fmcs.Core.Environment;
 import ru.hse.fmcs.Core.Interpreter;
 
+import java.nio.channels.Channels;
 import java.util.Scanner;
 
 public class Main {
@@ -12,7 +14,11 @@ public class Main {
      * direct call to "exit" or signal from OS.
      */
 
-    Interpreter interpreter = new Interpreter();
+    Interpreter interpreter = new Interpreter(
+        Channels.newChannel(System.in),
+        Channels.newChannel(System.out),
+        new Environment()
+    );
     Scanner scanner = new Scanner(System.in);
     while (scanner.hasNextLine()) {
       interpreter.execute(scanner.nextLine());
