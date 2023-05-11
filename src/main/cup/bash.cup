@@ -1,8 +1,22 @@
 package Parsing;
 
 import ru.hse.fmcs.Parsing.ASTNode.*;
+import java_cup.runtime.Symbol;
+import java.lang.Exception;
 
 class Parser;
+
+parser code {:
+  public void syntax_error(Symbol symbol) {}
+  public void report_error(String message, Object info) {}
+
+  public void report_fatal_error(String message, Object info) throws Exception {
+    if (info instanceof Symbol currentToken) {
+      throw new Exception("Syntax error at " + currentToken.toString());
+    }
+    throw new RuntimeException("Unknown parsing exception: " + message);
+  }
+:}
 
 terminal AssignmentWord, Word, Pipe;
 

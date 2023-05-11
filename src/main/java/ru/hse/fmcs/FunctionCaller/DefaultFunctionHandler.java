@@ -1,6 +1,7 @@
 package ru.hse.fmcs.FunctionCaller;
 
 import ru.hse.fmcs.FunctionCaller.BuiltinFunctions.*;
+import ru.hse.fmcs.StringUtil;
 import sun.misc.Signal;
 import sun.misc.SignalHandler;
 
@@ -98,16 +99,39 @@ public class DefaultFunctionHandler implements FunctionHandler {
           }
         }
       });
-
       outputThread.start();
+
+      Thread errorThread = new Thread(() -> {
+        while (process.isAlive()) {
+          try {
+            if (process.getErrorStream().available() > 0) {
+              byte[] errorStreamBytes = new byte[1024];
+              int readBytes = process.getErrorStream().read(errorStreamBytes);
+              query.error.write(StringUtil.colorString(new String(errorStreamBytes, 0, readBytes), StringUtil.Color.ANSI_RED).getBytes());
+            }
+          } catch (IOException ignored) {
+            break;
+          }
+        }
+      });
+      errorThread.start();
+
       try {
         inputThread.join();
         outputThread.join();
+        errorThread.join();
         return process.waitFor();
       } catch (InterruptedException ignored) {
         return process.exitValue();
       }
     } catch (IOException exception) {
+      try {
+        query.error.write(StringUtil.colorString(exception.getMessage(), StringUtil.Color.ANSI_RED).getBytes());
+        query.error.write('\n');
+      } catch (IOException ignored) {
+        // Fatal error
+        System.exit(1);
+      }
       return 1;
     } finally {
       // If signal comes just after process start, but

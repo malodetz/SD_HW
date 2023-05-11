@@ -9,6 +9,7 @@ import ru.hse.fmcs.Parsing.ASTBuilder;
 import ru.hse.fmcs.Parsing.ASTNode.*;
 import ru.hse.fmcs.Parsing.ParsingException;
 import ru.hse.fmcs.Parsing.Preprocessor;
+import ru.hse.fmcs.StringUtil;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -32,12 +33,15 @@ public class Interpreter {
 
   final private InputStream standardInput;
   final private OutputStream standardOutput;
+  final private OutputStream standardError;
 
   public Interpreter(final InputStream standardInput,
                      final OutputStream standardOutput,
+                     final OutputStream standardError,
                      final Environment environment) {
     this.standardInput = standardInput;
     this.standardOutput = standardOutput;
+    this.standardError = standardError;
     this.environment = environment;
 
     preprocessor = new Preprocessor(environment);
@@ -52,7 +56,7 @@ public class Interpreter {
    *
    * @param pipedCommands "list" of piped commands.
    */
-  private void executePipedCommands(final ASTNodePipedCommands pipedCommands) throws IOException, ExitException {
+  private void executePipedCommands(final ASTNodePipedCommands pipedCommands) {
     List<ASTNode> pipedCommandsList = pipedCommands.toList();
     List<Thread> threadsCommandsList = new ArrayList<>();
 
@@ -65,14 +69,20 @@ public class Interpreter {
       // via pipe. Pipes open n-1 times, where `n` is a number of
       // commands in pipeline.
       if (i != size - 1) {
-        Pipe pipe = Pipe.open();
-        nextSubInterpreterInput = Channels.newInputStream(pipe.source());
-        subInterpreterOutput = Channels.newOutputStream(pipe.sink());
+        try {
+          Pipe pipe = Pipe.open();
+          nextSubInterpreterInput = Channels.newInputStream(pipe.source());
+          subInterpreterOutput = Channels.newOutputStream(pipe.sink());
+        } catch (IOException exception) {
+          // TODO: Clear all pipes. Display error message and then exit the function.
+          throw new RuntimeException("Not implemented!");
+        }
       }
 
       Interpreter subInterpreter = new Interpreter(
           subInterpreterInput,
           subInterpreterOutput,
+          standardError,
           new Environment(environment)
       );
 
@@ -95,6 +105,9 @@ public class Interpreter {
         }
       });
       threadsCommandsList.add(thread);
+    }
+
+    for (Thread thread : threadsCommandsList) {
       thread.start();
     }
 
@@ -102,13 +115,13 @@ public class Interpreter {
       try {
         thread.join();
       } catch (InterruptedException e) {
-        e.printStackTrace();
-        throw new RuntimeException(e);
+        // Fatal error
+        System.exit(1);
       }
     }
   }
 
-  private void executeSingleCommand(final ASTNode command) throws IOException, ExitException {
+  private void executeSingleCommand(final ASTNode command) throws ExitException {
     if (command instanceof ASTNodeFunctionCall functionCall) {
       executeFunctionCall(functionCall, new Environment(environment));
     } else if (command instanceof ASTNodeEnvFunctionCall envFunctionCall) {
@@ -128,7 +141,7 @@ public class Interpreter {
   private int executeFunctionCall(ASTNodeFunctionCall node, Environment functionCallEnvironment) throws ExitException {
     List<String> arguments = node.argumentsList().stream().map(ASTNodeArgument::toString).map(Preprocessor::removeQuotes).toList();
     Query query = new Query(Preprocessor.removeQuotes(node.functionName),
-        arguments, standardInput, standardOutput, functionCallEnvironment);
+        arguments, standardInput, standardOutput, standardError, functionCallEnvironment);
     return functionHandler.handleFunction(query);
   }
 
@@ -146,16 +159,21 @@ public class Interpreter {
     try {
       AST ast = builder.build();
       execute(ast.root);
-    } catch (ParsingException | IOException exception) {
-      exception.printStackTrace();
-      System.exit(1);
+    } catch (ParsingException exception) {
+      try {
+        standardError.write(StringUtil.colorString(exception.getMessage(), StringUtil.Color.ANSI_RED).getBytes());
+        standardError.write('\n');
+      } catch (IOException ignored) {
+        // Fatal error
+        System.exit(1);
+      }
     }
   }
 
   /**
    * Executes the command encoded in AST.
    */
-  public void execute(ASTNode root) throws IOException, ExitException {
+  public void execute(ASTNode root) throws ExitException {
     if (root instanceof ASTNodePipedCommands pipedCommands) {
       executePipedCommands(pipedCommands);
     } else {

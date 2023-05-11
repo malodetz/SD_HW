@@ -12,14 +12,18 @@ public class Query {
 
   final public InputStream input;
   final public OutputStream output;
+  final public OutputStream error;
 
   final public Environment environment;
 
-  public Query(String name, List<String> args, InputStream input, OutputStream output, Environment environment) {
+  public Query(String name, List<String> args, InputStream input, OutputStream output, OutputStream error, Environment environment) {
     this.name = name;
     this.args = args;
+
     this.input = input;
     this.output = output;
+    this.error = error;
+
     this.environment = environment;
   }
 }

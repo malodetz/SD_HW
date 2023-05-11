@@ -119,4 +119,34 @@ public class Preprocessor {
     }
     return builder.toString();
   }
+
+  public static boolean needMoreInput(String query) {
+    int singleQuotes = 0;
+    int doubleQuotes = 0;
+
+    char lastNonSpaceCharacter = 0;
+    for (char ch : query.toCharArray()) {
+      switch (ch) {
+        case '\'' -> {
+          if (doubleQuotes == 0) {
+            singleQuotes ^= 1;
+          }
+        }
+        case '"' -> {
+          if (singleQuotes == 0) {
+            doubleQuotes ^= 1;
+          }
+        }
+        default -> {
+          if (!Character.isWhitespace(ch)) {
+            lastNonSpaceCharacter = ch;
+          }
+        }
+      }
+    }
+    if (singleQuotes != 0 || doubleQuotes != 0) {
+      return true;
+    }
+    return lastNonSpaceCharacter == '|';
+  }
 }

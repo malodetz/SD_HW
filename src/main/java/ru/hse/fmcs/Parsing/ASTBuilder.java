@@ -37,8 +37,7 @@ public class ASTBuilder {
     try {
       root = (ASTNode) parser.parse().value;
     } catch (Exception e) {
-      e.printStackTrace();
-      throw new ParsingException(e);
+      throw new ParsingException(e.getMessage());
     }
     return new AST(root);
   }
