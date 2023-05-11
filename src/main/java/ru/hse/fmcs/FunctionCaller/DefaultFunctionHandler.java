@@ -76,7 +76,7 @@ public class DefaultFunctionHandler implements FunctionHandler {
       oldSignalHandler = Signal.handle(signalSigInt, new ExternalFunctionSignalHandler(process));
 
       Thread inputThread = new Thread(() -> {
-        while (process.isAlive()) {
+        do {
           try {
             if (query.input.available() > 0) {
               query.input.transferTo(process.getOutputStream());
@@ -84,12 +84,12 @@ public class DefaultFunctionHandler implements FunctionHandler {
           } catch (IOException ignored) {
             break;
           }
-        }
+        } while (process.isAlive());
       });
       inputThread.start();
 
       Thread outputThread = new Thread(() -> {
-        while (process.isAlive()) {
+        do {
           try {
             if (process.getInputStream().available() > 0) {
               process.getInputStream().transferTo(query.output);
@@ -97,22 +97,22 @@ public class DefaultFunctionHandler implements FunctionHandler {
           } catch (IOException ignored) {
             break;
           }
-        }
+        } while (process.isAlive());
       });
       outputThread.start();
 
       Thread errorThread = new Thread(() -> {
-        while (process.isAlive()) {
+        byte[] errorStreamBytes = new byte[1024];
+        do {
           try {
             if (process.getErrorStream().available() > 0) {
-              byte[] errorStreamBytes = new byte[1024];
               int readBytes = process.getErrorStream().read(errorStreamBytes);
               query.error.write(StringUtil.colorString(new String(errorStreamBytes, 0, readBytes), StringUtil.Color.ANSI_RED).getBytes());
             }
           } catch (IOException ignored) {
             break;
           }
-        }
+        } while (process.isAlive());
       });
       errorThread.start();
 

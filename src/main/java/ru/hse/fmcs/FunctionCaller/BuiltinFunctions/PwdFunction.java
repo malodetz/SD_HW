@@ -10,6 +10,7 @@ public class PwdFunction implements BuiltinFunction {
     try {
       String responseString = System.getProperty("user.dir");
       query.output.write(responseString.getBytes());
+      query.output.write('\n');
     } catch (IOException exception) {
       return 1;
     }

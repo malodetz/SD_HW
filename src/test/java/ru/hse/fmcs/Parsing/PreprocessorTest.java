@@ -30,7 +30,7 @@ public class PreprocessorTest {
 
   @Test
   public void escapeSpecialCharactersTest() {
-    env.addVariable("a", "|");
+    env.addVariable("a", "\\|");
     String query = "echo a $a cat";
     String expectedQuery = "echo a \\| cat";
     assert (expectedQuery.equals(preprocessor.processSubstitutions(query)));

@@ -31,7 +31,7 @@ import java_cup.runtime.*;
 
 NewLine = \r|\n|\r\n
 WhiteSpace = \s
-Token = [^\|\s\"\']+
+Token = ([^\|\s\"\']|(\\.))+
 Pipe = \|
 SingleQuotedString = \' ~\'
 DoubleQuotedString = \" ~\"
