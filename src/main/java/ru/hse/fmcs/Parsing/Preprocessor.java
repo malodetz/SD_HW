@@ -98,6 +98,7 @@ public class Preprocessor {
               firstSingleQuote = innerIndex;
               continue;
             }
+            builder.append("\\");
           } else {
             firstSingleQuote = -1;
             continue;
@@ -109,13 +110,19 @@ public class Preprocessor {
               firstDoubleQuote = innerIndex;
               continue;
             }
+            builder.append("\\");
           } else {
             firstDoubleQuote = -1;
             continue;
           }
         }
+        case '|' -> {
+          builder.append("\\");
+        }
       }
-      builder.append(token.charAt(innerIndex));
+      if (innerIndex < token.length()) {
+        builder.append(token.charAt(innerIndex));
+      }
     }
     return builder.toString();
   }
@@ -137,11 +144,9 @@ public class Preprocessor {
             doubleQuotes ^= 1;
           }
         }
-        default -> {
-          if (!Character.isWhitespace(ch)) {
-            lastNonSpaceCharacter = ch;
-          }
-        }
+      }
+      if (!Character.isWhitespace(ch)) {
+        lastNonSpaceCharacter = ch;
       }
     }
     if (singleQuotes != 0 || doubleQuotes != 0) {
