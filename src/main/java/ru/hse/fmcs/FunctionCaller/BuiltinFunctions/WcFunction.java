@@ -2,37 +2,24 @@ package ru.hse.fmcs.FunctionCaller.BuiltinFunctions;
 
 import ru.hse.fmcs.FunctionCaller.Query;
 
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
+import java.io.*;
 
 public class WcFunction implements BuiltinFunction {
-  static private final int BUFFER_SIZE = 1024;
+  private final static int BUFFER_SIZE = 1024;
 
   private int internalRun(final InputStream inputStream, final OutputStream outputStream) {
     try {
-      long bytesCount = 0;
-      long linesCount = 0;
-      long wordsCount = 0;
-
-      int prevSymbol = -1;
-
-      byte[] byteBuffer = new byte[BUFFER_SIZE];
-      int readBytes = inputStream.read(byteBuffer);
-      while (readBytes != -1) {
-        for (byte symbol : byteBuffer) {
-          if (Character.isSpaceChar(symbol)) {
-            if (Character.isLetter(prevSymbol)) {
-              ++wordsCount;
-            }
-            ++linesCount;
-          }
-          prevSymbol = symbol;
-        }
-        bytesCount += readBytes;
-        readBytes = inputStream.read(byteBuffer);
+      char[] buffer = new char[BUFFER_SIZE];
+      StringBuilder out = new StringBuilder();
+      InputStreamReader inputStreamReader = new InputStreamReader(inputStream);
+      for (int numRead; (numRead = inputStreamReader.read(buffer, 0, buffer.length)) > 0; ) {
+        out.append(buffer, 0, numRead);
       }
+      String line = out.toString();
+
+      long bytesCount = line.length();
+      long linesCount = line.lines().count();
+      long wordsCount = line.split("\\s+").length;
 
       String responseString = String.format("%d %d %d\n", linesCount, wordsCount, bytesCount);
       outputStream.write(responseString.getBytes());
