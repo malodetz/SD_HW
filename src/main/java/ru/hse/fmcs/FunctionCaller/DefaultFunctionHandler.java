@@ -41,7 +41,7 @@ public class DefaultFunctionHandler implements FunctionHandler {
         } else {
           killCommand = String.join(" ", "kill", "-s", sig.getName(), Long.toString(executorProcess.pid()));
         }
-        // FIXME: first invocation almost always fails with unknown pid.
+        // FIXME: first invocation almost always fails with unknown pid. But why?
         Runtime.getRuntime().exec(killCommand).waitFor();
         executorProcess.destroy();
       } catch (IOException | InterruptedException ignored) {
@@ -120,10 +120,13 @@ public class DefaultFunctionHandler implements FunctionHandler {
 
   @Override
   public int handleFunction(Query query) throws ExitException {
+    // In this implementation builtins do not require
+    // signal handling, except for cat and wc functions.
+    // It would be better to compile code for them as for separate utilities,
+    // but for now we will leave implementations as builtins without signal handling.
     if (isBuiltinFunction(query)) {
       return builtinFunctions.get(query.name).run(query);
-    } else {
-      return handleExternalCall(query);
     }
+    return handleExternalCall(query);
   }
 }

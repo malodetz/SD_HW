@@ -16,9 +16,8 @@ public class Main {
      */
 
     Signal signalSigInt = new Signal("INT");
-    Signal.handle(signalSigInt, (Signal sig) -> {
-      System.out.println();
-      System.out.print("> ");
+    // Not the same as SignalHandler.SIG_IGN.
+    Signal.handle(signalSigInt, (Signal) -> {
     });
 
     Interpreter interpreter = new Interpreter(System.in, System.out, new Environment());
