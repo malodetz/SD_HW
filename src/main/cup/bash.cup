@@ -1,0 +1,66 @@
+package Parsing;
+
+import ru.hse.fmcs.Parsing.ASTNode.*;
+import java_cup.runtime.Symbol;
+import java.lang.Exception;
+
+class Parser;
+
+parser code {:
+  public void syntax_error(Symbol symbol) {}
+  public void report_error(String message, Object info) {}
+
+  public void report_fatal_error(String message, Object info) throws Exception {
+    if (info instanceof Symbol currentToken) {
+      throw new Exception("Syntax error at " + currentToken.toString());
+    }
+    throw new RuntimeException("Unknown parsing exception: " + message);
+  }
+:}
+
+terminal AssignmentWord, Word, Pipe;
+
+nonterminal Assignment, AssignmentsList;
+nonterminal Argument, ArgumentsList;
+nonterminal Function, FunctionCall;
+nonterminal VarDecl, EnvFunctionCall;
+nonterminal SingleCommand, PipedCommand, CompoundCommand;
+
+start with CompoundCommand;
+
+CompoundCommand ::= SingleCommand:head Pipe PipedCommand:tail {: RESULT = new ASTNodePipedCommands((ASTNode) head, (ASTNodePipedCommands) tail); :}
+                  | SingleCommand:cmd {: RESULT = cmd; :}
+                  | {: RESULT = new ASTNodeEmpty(); :}
+                  ;
+
+PipedCommand ::= SingleCommand:cmd {: RESULT = new ASTNodePipedCommands((ASTNode) cmd, null); :}
+               | SingleCommand:head Pipe PipedCommand:tail {: RESULT = new ASTNodePipedCommands((ASTNode) head, (ASTNodePipedCommands) tail); :}
+               ;
+
+SingleCommand ::= VarDecl:decl {: RESULT = decl; :}
+                | EnvFunctionCall:envFunc {: RESULT = envFunc; :}
+                | FunctionCall:func {: RESULT = func; :}
+                ;
+
+VarDecl ::= AssignmentsList:assign {: RESULT = new ASTNodeVarDecl((ASTNodeAssignmentsList) assign); :};
+EnvFunctionCall ::= AssignmentsList:assign FunctionCall:func {: RESULT = new ASTNodeEnvFunctionCall((ASTNodeAssignmentsList) assign, (ASTNodeFunctionCall) func); :};
+
+Assignment ::= AssignmentWord:assign {:
+             String headString = (String) assign;
+             int asgnIdx = headString.indexOf('=');
+             String name = headString.substring(0, asgnIdx);
+             String value = headString.substring(asgnIdx + 1);
+             RESULT = new ASTNodeAssignment(name, value);
+            :};
+AssignmentsList ::= Assignment:head AssignmentsList:tail {: RESULT = new ASTNodeAssignmentsList((ASTNodeAssignment) head, (ASTNodeAssignmentsList) tail); :}
+              | Assignment:head {: RESULT = new ASTNodeAssignmentsList((ASTNodeAssignment) head, null); :};
+
+Function ::= Word:name {: RESULT = name; :};
+FunctionCall ::= Function:func ArgumentsList:args {: RESULT = new ASTNodeFunctionCall((String) func, (ASTNodeArgumentsList) args); :};
+
+Argument ::= Word:name {: RESULT = new ASTNodeArgument((String) name); :};
+ArgumentsList ::= Argument:head ArgumentsList:tail {: RESULT = new ASTNodeArgumentsList((ASTNodeArgument) head, (ASTNodeArgumentsList) tail); :}
+                | {: RESULT = null; :}
+                ;
+
+

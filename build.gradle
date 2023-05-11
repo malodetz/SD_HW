@@ -1,0 +1,43 @@
+plugins {
+    id 'java'
+    id 'application'
+    id "cup.gradle.cup-gradle-plugin" version "2.0"
+    id "org.xbib.gradle.plugin.jflex" version "1.7.0"
+}
+
+group 'ru.hse.fmcs'
+version '1.0-SNAPSHOT'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.1'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.1'
+    implementation 'org.apache.commons:commons-lang3:3.0'
+}
+
+application {
+    mainClass = 'ru.hse.fmcs.Main'
+}
+
+jar {
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+
+    manifest {
+        attributes "Main-Class": "ru.hse.fmcs.Main"
+    }
+
+    from {
+        configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) }
+    }
+}
+
+compileJava.options.release.set(17)
+
+test {
+    useJUnitPlatform()
+}
+sourceCompatibility = JavaVersion.VERSION_17
+targetCompatibility = JavaVersion.VERSION_17
