@@ -1,4 +1,6 @@
 import LevelGenerator
+import kernel.Chunk as Chunk
 
 class ProceduralLevelGenerator(LevelGenerator):
-  pass
+  def generateChunk() -> Chunk:
+    pass
