@@ -1,6 +1,4 @@
-import kernel.controllers.Controller as Controller
-
-class InputHandler:
+class KernelInput:
   """A class providing input for all registered listeners.
 
   Class implementing "observer" pattern. Awaits for events
@@ -14,7 +12,7 @@ class InputHandler:
     self._screen = screen
 
   def awaitInput(self):
-    pass
+    self._screen.getch()
 
   def listen(self, listener) -> None:
     pass

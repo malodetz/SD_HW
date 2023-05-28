@@ -1,5 +1,4 @@
-import Actor
-import controllers.Controller as Controller
+from actors import Actor, Controller
 
 class Pawn(Actor):
   _controller: Controller
@@ -10,4 +9,3 @@ class Pawn(Actor):
 
   def getController(self) -> Controller:
     return self._controller
-  

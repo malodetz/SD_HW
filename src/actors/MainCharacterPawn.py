@@ -1,4 +1,4 @@
-import Pawn
+from actors import Pawn 
 
 class MainCharacterPawn(Pawn):
   _healthCount: int

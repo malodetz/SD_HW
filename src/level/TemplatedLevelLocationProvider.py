@@ -1,0 +1,13 @@
+from .Chunk import Chunk
+import level.LevelLocationProvider as LevelLocationProvider
+
+class TemplatedLevelLocationProvider(LevelLocationProvider):
+  def __init__(self):
+    pass
+
+  def loadChunk() -> Chunk:
+    return Chunk(""".....
+.....
+.....
+.....
+.....""")

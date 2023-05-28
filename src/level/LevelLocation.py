@@ -1,7 +1,7 @@
-import Level
-import Chunk
+from .Level import Level
+from .Chunk import Chunk
 
-class GameLevel(Level):
+class LevelLocation(Level):
   _chunks: dict
 
   def __init__(self):
@@ -11,5 +11,5 @@ class GameLevel(Level):
   def loadChunk(self, xCoordChunk: int, yCoordChunk: int) -> Chunk:
     chunk = self._chunks[(xCoordChunk, yCoordChunk)]
     if chunk == None:
-      pass
+      self._chunks[(xCoordChunk, yCoordChunk)] = super().getWorld()._levelProvider.loadChunk()
     return chunk
