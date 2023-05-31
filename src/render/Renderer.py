@@ -1,28 +1,33 @@
 from .View import View
-import curses
+from .CompoundView import CompoundView
+from .RenderedView import RenderedView
+from .RenderedViewBuilder import RenderedViewBuilder
 
 class Renderer:
-  """Class for rendering and displaying views placed on the screen.  
+  """Class for rendering and displaying views visible at the screen.  
 
   """
 
-  _screen: 'curses._CursesWindow'
-  _views: dict
-
-  def __init__(self, screen: 'curses._CursesWindow'):
-    self._screen = screen
-
-  def registerView(self, view: View):
-    """
-    TODO:
-    """
-    self._views[""] = view
-
-  def _renderAt(self, xCoord: int, yCoord: int, xHeight: int, yWidth: int, view: View) -> None:
-    view.render()
-    for x in range(xCoord, xCoord + xHeight):
-      for y in range(yCoord, yCoord + yWidth):
-        self._screen.addch(x, y, renderedView.at(x, y))
-
-  def render(self) -> None:
+  def __init__(self):
     pass
+
+  def renderView(self, view: View) -> RenderedView:    
+    if isinstance(view, CompoundView):
+      return self._renderCompoundView(view)
+    
+    return self._renderSingleView(view)
+
+  def _renderSingleView(self, view: View) -> RenderedView:
+    renderedViewBuilder: RenderedViewBuilder = RenderedViewBuilder(view.xHeight, view.yHeight)
+    renderedViewBuilder.nest(0, 0, view)
+    return renderedViewBuilder.build()
+  
+
+  def _renderCompoundView(self, view: CompoundView) -> RenderedView:
+    renderedViewBuilder: RenderedViewBuilder = RenderedViewBuilder(view.xHeight, view.yWidth) 
+    for (x, y), subView in view.subViews.items():
+      renderedSubView: RenderedView = self.renderView(subView)
+      renderedViewBuilder.nest(x, y, renderedSubView)
+    
+    return renderedViewBuilder.build()
+ 

@@ -1,7 +1,11 @@
 from .Widget import Widget
+from render import View
 
 class HUD:
-  _widget = None
+  _HUDView: View
 
-  def __init__(self, widget: Widget):
-    self._widget = widget
+  def __init__(self) -> None:
+    _HUDView = None
+
+  def getView(self) -> View:
+    return self._HUDView

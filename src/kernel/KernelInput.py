@@ -1,3 +1,5 @@
+import curses
+
 class KernelInput:
   """A class providing input for all registered listeners.
 
@@ -6,13 +8,14 @@ class KernelInput:
   listeners.
   """
 
+  _screen: 'curses._CursesWindow'
   _listeners: list
 
-  def __init__(self, screen):
+  def __init__(self, screen: 'curses._CursesWindow'):
     self._screen = screen
 
   def awaitInput(self):
-    self._screen.getch()
+    ctrl = self._screen.getch()
 
   def listen(self, listener) -> None:
     pass

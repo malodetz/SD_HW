@@ -1,10 +1,7 @@
 class View:
+  xHeight: int
+  yWidth: int
 
-  def __init__(self):
-    raise NotImplementedError()
-
-  def update(self):
-    raise NotImplementedError()
-
-  def render(self):
-    raise NotImplementedError()
+  def __init__(self, xHeight: int, yWidth: int):
+    self.xHeight = xHeight
+    self.yWidth = yWidth

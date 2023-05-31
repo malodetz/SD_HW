@@ -1,19 +1,14 @@
-import render.View as View
+from render import CompoundView
 
-class CameraView(View):
+class CameraView(CompoundView):
   """Class representing view from the camera.
 
   Renderable component representing image, which
   the owning camera views at the moment.
   """
 
-  _subViews: set
-
   def __init__(self):
     super().__init__(self)
 
-  def update(self, views: set):
-    self._subViews = views
-
-  def render(self):
-    pass
+  def update(self, views: dict):
+    self.subViews = views

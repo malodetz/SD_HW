@@ -1,3 +1,5 @@
 from .Renderer import Renderer
+
 from .View import View
-from .ViewInfo import ViewInfo
+from .CompoundView import CompoundView
+from .RenderedView import RenderedView

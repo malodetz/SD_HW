@@ -9,7 +9,6 @@ class LevelLocation(Level):
     self._chunks = {}
 
   def loadChunk(self, xCoordChunk: int, yCoordChunk: int) -> Chunk:
-    chunk = self._chunks[(xCoordChunk, yCoordChunk)]
-    if chunk == None:
+    if not (xCoordChunk, yCoordChunk) in self._chunks:
       self._chunks[(xCoordChunk, yCoordChunk)] = super().getWorld()._levelProvider.loadChunk()
-    return chunk
+    return self._chunks[(xCoordChunk, yCoordChunk)]

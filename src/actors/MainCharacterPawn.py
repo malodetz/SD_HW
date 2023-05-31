@@ -6,3 +6,9 @@ class MainCharacterPawn(Pawn):
   
   def __init__(self) -> None:
     super().__init__(self)
+
+  def beginPlay(self) -> None:
+    pass
+
+  def tick(self) -> None:
+    super().tick()

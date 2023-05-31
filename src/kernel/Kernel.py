@@ -1,25 +1,39 @@
 import curses
 
-from render import Renderer
 from .KernelInput import KernelInput
+from .KernelOutput import KernelOutput
 from .GameInstance import GameInstance
 
+from render import Renderer
+from render import RenderedView
+
 class Kernel:
-  _renderer: Renderer
   _kernelInput: KernelInput
+  _kernelOutput: KernelOutput
+
+  # TODO: move to kernel output?
+  _renderer: Renderer
   _gameInstance: GameInstance
 
+
   def __init__(self):
-    self.screen = curses.initscr()
+    screen = curses.initscr()
     curses.noecho()
     curses.cbreak()
 
-    self._renderer = Renderer(self.screen)
-    self._kernelInput = KernelInput(self.screen)
+    self._kernelInput = KernelInput(screen)
+    self._kernelOutput = KernelOutput(screen)
     self._gameInstance = GameInstance()    
+    self._renderer = Renderer()
+
+  def initGame(self):
+    pass
 
   def run(self) -> None:
     while True:
       self._kernelInput.awaitInput()
+
       self._gameInstance.tick()
-      self._renderer.render()
+
+      renderedView: RenderedView = self._renderer.renderView(self._gameInstance.view())
+      self._kernelOutput.show(renderedView)

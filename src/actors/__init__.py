@@ -1,5 +1,4 @@
 from .Actor import Actor
-from .ActorView import ActorView
 
 from .CameraActor import CameraActor 
 from .CameraView import CameraView

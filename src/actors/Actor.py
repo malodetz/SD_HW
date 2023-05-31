@@ -1,10 +1,6 @@
-from level import Level
-
 class Actor:
-  _owningLevel: Level
-
-  xCoord: int
-  yCoord: int
+  _owningLevel: 'Level'
+  _actorView: 'View'
   
   def __init__(self) -> None:
     pass
@@ -12,8 +8,14 @@ class Actor:
   def beginPlay() -> None:
     pass
 
-  def getLevel(self) -> Level:
+  def getLevel(self) -> 'Level':
     return self._owningLevel
   
+  def view(self) -> 'View':
+    return self._actorView
+
   def tick() -> None:
     pass
+
+from render import View
+from level import Level
