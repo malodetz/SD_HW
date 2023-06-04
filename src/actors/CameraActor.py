@@ -1,4 +1,6 @@
-from actors import Actor, CameraView
+from .Actor import Actor
+from .CameraView import CameraView
+from render import View
 from level import Level
 
 class CameraActor(Actor):
@@ -15,17 +17,24 @@ class CameraActor(Actor):
   _xHalfHeightObserved: int
   _yHalfWidthObserved: int
 
-  def __init__(self) -> None:
-    super().__init__(self)
+  def __init__(self, xHalfHeightObserved: int, yHalfWidthObserved: int) -> None:
+    super().__init__()
+    self._xHalfHeightObserved = xHalfHeightObserved
+    self._yHalfWidthObserved = yHalfWidthObserved
+    self._cameraView = CameraView(self._xHalfHeightObserved, self._yHalfWidthObserved)
 
   def _isObserved(self, xCoord: int, yCoord: int) -> bool:
-    return xCoord in range(super().xCoord() - self._xHalfHeightObserved, super().xCoord() + self._xHalfWidthObserved + 1) and \
-           yCoord in range(super().yCoord() - self._yHalfHeightObserved, super().yCoord() + self._yHalfWidthObserved + 1)
+    xCoordsOnLevel: int
+    yCoordsOnLevel: int
+    xCoordsOnLevel, yCoordsOnLevel = self._owningLevel.coordsActor(self)
+    
+    return xCoord in range(xCoordsOnLevel - self._xHalfHeightObserved, xCoordsOnLevel + self._xHalfHeightObserved + 1) and \
+           yCoord in range(yCoordsOnLevel - self._yHalfWidthObserved, yCoordsOnLevel + self._yHalfWidthObserved + 1)
 
   def _observedActors(self) -> list[Actor]:
     observed: list[Actor] = []
     
-    level: Level = self.getLevel()    
+    level: Level = self._owningLevel    
     for actor in level.actors():
       actorXCoord: int
       actorYCoord: int
@@ -38,4 +47,7 @@ class CameraActor(Actor):
   def tick(self) -> None:
     super().tick()
     observedActors: list[Actor] = self._observedActors()
-    self._cameraView.update(observedActors)
+    observedViews: list[View] = map(Actor.view, observedActors)
+
+    cameraViewAfterTick: dict[View, tuple[int, int]] = dict(zip(observedViews, map(self._owningLevel.coordsActor, observedActors)))
+    self._cameraView.update(cameraViewAfterTick)

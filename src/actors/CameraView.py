@@ -1,4 +1,6 @@
+from render import View
 from render import CompoundView
+
 
 class CameraView(CompoundView):
   """Class representing view from the camera.
@@ -7,8 +9,8 @@ class CameraView(CompoundView):
   the owning camera views at the moment.
   """
 
-  def __init__(self):
-    super().__init__(self)
+  def __init__(self, xHeight: int, yWidth: int):
+    super().__init__(xHeight, yWidth)
 
-  def update(self, views: dict):
+  def update(self, views: dict[View, tuple[int, int]]):
     self.subViews = views

@@ -11,7 +11,7 @@ class Kernel:
   _kernelInput: KernelInput
   _kernelOutput: KernelOutput
 
-  # TODO: move to kernel output?
+  # TODO: move to the kernel output?
   _renderer: Renderer
   _gameInstance: GameInstance
 

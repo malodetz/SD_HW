@@ -2,7 +2,9 @@ class Chunk:
   _xSize: int
   _ySize: int
 
-  _gameField: str
+  _subActors: dict['Actor', tuple[int, int]]
 
-  def __init__(self, field: str):
-    self._gameField = field
+  def __init__(self, subActors: dict['Actor', tuple[int, int]]) -> None:
+    self._subActors = subActors
+
+from actors import Actor

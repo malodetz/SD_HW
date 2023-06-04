@@ -1,8 +1,16 @@
 from level import World
+from level import Level
+from level import LevelLocation
+from level import LevelLocationProvider
+from level import TemplatedLevelLocationProvider
+
+
 from ui import HUD
 
 from render import View
 from render import CompoundView
+
+from actors import CameraActor
 
 class GameInstance:
   _world: World
@@ -14,7 +22,16 @@ class GameInstance:
     self._world = World()
     self._hud = HUD()
 
-    self._gameView = CompoundView(10, 10)
+    # self._gameView = CompoundView(10, 10)
+
+    # TODO: for test. Remove later.
+    initialLevelLocationProvider: LevelLocationProvider = TemplatedLevelLocationProvider()
+    initialLevel: Level = LevelLocation(initialLevelLocationProvider)
+    self._world.loadLevel(initialLevel)
+    cameraActor: CameraActor = CameraActor(50, 50)
+    
+    self._gameView = cameraActor._cameraView
+    self._world._currentLevel.spawnActor(0, 0, cameraActor)
 
   def view(self) -> View:
     return self._gameView

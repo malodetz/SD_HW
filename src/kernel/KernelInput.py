@@ -15,7 +15,7 @@ class KernelInput:
     self._screen = screen
 
   def awaitInput(self):
-    ctrl = self._screen.getch()
+    ctrl: int = self._screen.getch()
 
   def listen(self, listener) -> None:
     pass

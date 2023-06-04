@@ -25,7 +25,9 @@ class Renderer:
 
   def _renderCompoundView(self, view: CompoundView) -> RenderedView:
     renderedViewBuilder: RenderedViewBuilder = RenderedViewBuilder(view.xHeight, view.yWidth) 
-    for (x, y), subView in view.subViews.items():
+    for subView, (x, y) in view.subViews.items():
+      if subView is None:
+        continue
       renderedSubView: RenderedView = self.renderView(subView)
       renderedViewBuilder.nest(x, y, renderedSubView)
     

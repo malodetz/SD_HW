@@ -14,6 +14,7 @@ class Level:
 
   def spawnActor(self, xCoord: int, yCoord: int, actor: Actor) -> None:
     self._actors[actor] = (xCoord, yCoord)
+    actor.setLevel(self)
 
   def coordsActor(self, actor: Actor) -> tuple[int, int]:
     return self._actors[actor]
@@ -29,7 +30,7 @@ class Level:
     return self._owningWorld
 
   def tick(self) -> None:
-    for actor in self._actors.values():
+    for actor in self._actors.keys():
       actor.tick()
 
 from .World import World

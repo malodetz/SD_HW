@@ -5,7 +5,6 @@ from .LevelLocationProvider import LevelLocationProvider
 
 class World:
   _currentLevel: Level
-  _levelProvider: LevelLocationProvider
 
   def __init__(self) -> None:
     self._currentLevel = None
@@ -19,4 +18,3 @@ class World:
   def tick(self) -> None:
     if not self._currentLevel is None:
       self._currentLevel.tick()
-  
