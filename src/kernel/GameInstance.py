@@ -25,7 +25,7 @@ class GameInstance:
     # self._gameView = CompoundView(10, 10)
 
     # TODO: for test. Remove later.
-    initialLevelLocationProvider: LevelLocationProvider = TemplatedLevelLocationProvider()
+    initialLevelLocationProvider: LevelLocationProvider = TemplatedLevelLocationProvider(5, 5)
     initialLevel: Level = LevelLocation(initialLevelLocationProvider)
     self._world.loadLevel(initialLevel)
     cameraActor: CameraActor = CameraActor(50, 50)

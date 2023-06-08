@@ -1,7 +1,10 @@
 from .Actor import Actor
 from .CameraView import CameraView
+
 from render import View
 from level import Level
+
+from render import RenderedView
 
 class CameraActor(Actor):
   """Actor representing camera. Can be exposed in the world.
@@ -19,9 +22,11 @@ class CameraActor(Actor):
 
   def __init__(self, xHalfHeightObserved: int, yHalfWidthObserved: int) -> None:
     super().__init__()
+    self.setView(RenderedView([['@']]))
+    
     self._xHalfHeightObserved = xHalfHeightObserved
     self._yHalfWidthObserved = yHalfWidthObserved
-    self._cameraView = CameraView(self._xHalfHeightObserved, self._yHalfWidthObserved)
+    self._cameraView = CameraView(self._xHalfHeightObserved * 2 + 1, self._yHalfWidthObserved * 2 + 1)
 
   def _isObserved(self, xCoord: int, yCoord: int) -> bool:
     xCoordsOnLevel: int
@@ -36,10 +41,10 @@ class CameraActor(Actor):
     
     level: Level = self._owningLevel    
     for actor in level.actors():
-      actorXCoord: int
-      actorYCoord: int
-      actorXCoord, actorYCoord = level.coordsActor(actor)
-      if self._isObserved(actorXCoord, actorYCoord):
+      xCoordActor: int
+      yCoordActor: int
+      xCoordActor, yCoordActor = level.coordsActor(actor)
+      if self._isObserved(xCoordActor, yCoordActor):
         observed.append(actor)
 
     return observed

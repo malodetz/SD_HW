@@ -8,7 +8,15 @@ class KernelOutput:
   def __init__(self, screen: 'curses._CursesWindow') -> None:
     self._screen = screen
 
-  def show(self, renderedView: RenderedView) -> None:
-    for x in range(renderedView.xHeight):
-      for y in range(renderedView.yWidth):
-        self._screen.addch(x, y, renderedView.at(x, y))
+  def _inScreen(self, xCoord, yCoord) -> bool:
+    if xCoord < 0 or yCoord < 0:
+      return False
+    xCoordMaxScreen, yCoordMaxScreen = self._screen.getmaxyx()
+    return xCoord < xCoordMaxScreen and yCoord < yCoordMaxScreen
+
+
+  def show(self, renderedView: RenderedView) -> None:    
+    for xCoord in range(renderedView.xHeight):
+      for yCoord in range(renderedView.yWidth):
+        if (self._inScreen(xCoord, yCoord)):
+          self._screen.addch(xCoord, yCoord, renderedView.at(xCoord, yCoord))

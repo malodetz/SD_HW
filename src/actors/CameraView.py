@@ -9,8 +9,8 @@ class CameraView(CompoundView):
   the owning camera views at the moment.
   """
 
-  def __init__(self, xHeight: int, yWidth: int):
+  def __init__(self, xHeight: int, yWidth: int) -> None:
     super().__init__(xHeight, yWidth)
 
-  def update(self, views: dict[View, tuple[int, int]]):
+  def update(self, views: dict[View, tuple[int, int]]) -> None:
     self.subViews = views

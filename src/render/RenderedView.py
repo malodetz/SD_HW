@@ -3,7 +3,7 @@ from .View import View
 class RenderedView(View):
   _content: list[list[str]]
 
-  def __init__(self, _content: list):
+  def __init__(self, _content: list[list[str]]):
     xHeight: int = len(_content)
     yWidth: int = len(_content[0]) if xHeight > 0 else 0
 

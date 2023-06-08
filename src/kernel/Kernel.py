@@ -16,7 +16,7 @@ class Kernel:
   _gameInstance: GameInstance
 
 
-  def __init__(self):
+  def __init__(self) -> None:
     screen = curses.initscr()
     curses.noecho()
     curses.cbreak()
@@ -26,14 +26,13 @@ class Kernel:
     self._gameInstance = GameInstance()    
     self._renderer = Renderer()
 
-  def initGame(self):
+  def initGame(self) -> None:
     pass
 
   def run(self) -> None:
-    while True:
-      self._kernelInput.awaitInput()
-
-      self._gameInstance.tick()
-
+    while True: 
       renderedView: RenderedView = self._renderer.renderView(self._gameInstance.view())
       self._kernelOutput.show(renderedView)
+
+      self._kernelInput.awaitInput()
+      self._gameInstance.tick()

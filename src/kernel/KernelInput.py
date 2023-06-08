@@ -11,10 +11,10 @@ class KernelInput:
   _screen: 'curses._CursesWindow'
   _listeners: list
 
-  def __init__(self, screen: 'curses._CursesWindow'):
+  def __init__(self, screen: 'curses._CursesWindow') -> None:
     self._screen = screen
 
-  def awaitInput(self):
+  def awaitInput(self) -> None:
     ctrl: int = self._screen.getch()
 
   def listen(self, listener) -> None:

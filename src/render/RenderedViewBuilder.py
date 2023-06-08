@@ -11,7 +11,7 @@ class RenderedViewBuilder:
   def nest(self, x: int, y: int, viewToNest: RenderedView) -> 'RenderedViewBuilder':
     for xView in range (viewToNest.xHeight):
       for yView in range (viewToNest.yWidth):
-        self._content[x + xView, y + yView] = viewToNest.at(xView, yView)
+        self._content[x + xView][y + yView] = viewToNest.at(xView, yView)
     return self
 
   def build(self) -> RenderedView:

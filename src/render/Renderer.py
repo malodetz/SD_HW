@@ -18,7 +18,7 @@ class Renderer:
     return self._renderSingleView(view)
 
   def _renderSingleView(self, view: View) -> RenderedView:
-    renderedViewBuilder: RenderedViewBuilder = RenderedViewBuilder(view.xHeight, view.yHeight)
+    renderedViewBuilder: RenderedViewBuilder = RenderedViewBuilder(view.xHeight, view.yWidth)
     renderedViewBuilder.nest(0, 0, view)
     return renderedViewBuilder.build()
   
