@@ -8,7 +8,7 @@ class MainCharacterPawn(Pawn):
     super().__init__(self)
 
   def beginPlay(self) -> None:
-    pass
+    super().beginPlay()
 
   def tick(self) -> None:
     super().tick()

@@ -1,7 +1,4 @@
-from actors import Actor
-
 from .Level import Level
-from .LevelLocationProvider import LevelLocationProvider
 
 class World:
   _currentLevel: Level

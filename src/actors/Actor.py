@@ -12,10 +12,13 @@ class Actor:
   def beginPlay() -> None:
     pass
 
-  def setView(self, view: 'View', xOffsetActorView: int = 0, yOffsetActorView: int = 0):
+  def setView(self, view: 'View', xOffsetActorView: int = 0, yOffsetActorView: int = 0) -> None:
     self._actorView = view
     self._xOffsetActorView = xOffsetActorView
     self._yOffsetActorView = yOffsetActorView
+
+  def coords(self) -> tuple[int, int]:
+    return self._owningLevel.coordsActor(self)
 
   def setLevel(self, level) -> None:
     self._owningLevel = level

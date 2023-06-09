@@ -28,7 +28,7 @@ class GameInstance:
     initialLevelLocationProvider: LevelLocationProvider = TemplatedLevelLocationProvider(5, 5)
     initialLevel: Level = LevelLocation(initialLevelLocationProvider)
     self._world.loadLevel(initialLevel)
-    cameraActor: CameraActor = CameraActor(50, 50)
+    cameraActor: CameraActor = CameraActor(25, 25)
     
     self._gameView = cameraActor._cameraView
     self._world._currentLevel.spawnActor(0, 0, cameraActor)
