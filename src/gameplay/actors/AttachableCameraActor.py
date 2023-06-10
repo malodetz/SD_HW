@@ -10,9 +10,9 @@ class AttachableCameraActor(CameraActor):
 
   def attachTo(self, actor: Actor) -> None:
     self._actorAttachedTo = actor
+    self.setCoords(self._actorAttachedTo.coords())
 
   def tick(self) -> None:
-    super().tick()
-
     if self._actorAttachedTo is not None:
       self.setCoords(self._actorAttachedTo.coords())
+    super().tick()

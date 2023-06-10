@@ -14,6 +14,9 @@ from engine.render import RenderedView
 from engine.actors import Actor
 from engine.actors import CameraActor
 
+from gameplay.actors import MainCharacterPawn
+from gameplay.actors import AttachableCameraActor
+
 class GameInstance:
   _world: World
   _hud: HUD
@@ -30,10 +33,17 @@ class GameInstance:
     initialLevelLocationProvider: LevelLocationProvider = TemplatedLevelLocationProvider(5, 5)
     initialLevel: Level = LevelLocation(initialLevelLocationProvider)
     self._world.loadLevel(initialLevel)
-    cameraActor: CameraActor = CameraActor(25, 25)
     
+    cameraActor: AttachableCameraActor = AttachableCameraActor(25, 25)
     self._gameView = cameraActor._cameraView
+
+    mainCharacter: MainCharacterPawn = MainCharacterPawn()
+
     self._world._currentLevel.spawnActor(cameraActor, (0, 0))
+    self._world._currentLevel.spawnActor(mainCharacter, (0, 0))
+    
+    cameraActor.attachTo(mainCharacter)
+    mainCharacter.setView(RenderedView([["@"]]))
 
     actor: Actor = Actor()
     actor.setView(RenderedView([["A"]]))

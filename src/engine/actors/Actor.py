@@ -8,6 +8,7 @@ class Actor:
   
   def __init__(self) -> None:
     self._actorView = None
+    self._owningLevel = None
   
   def beginPlay(self) -> None:
     pass

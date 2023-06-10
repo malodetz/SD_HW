@@ -8,11 +8,8 @@ class LevelLocationProvider:
     self._xHeightChunk = xHeightChunk
     self._yWidthChunk = yWidthChunk
 
-  def xSizeChunk(self) -> int:
-    return self._xHeightChunk
-
-  def ySizeChunk(self) -> int:
-    return self._yWidthChunk
+  def chunkSizes(self) -> tuple[int, int]:
+    return (self._xHeightChunk, self._yWidthChunk)
 
   def loadChunk() -> Chunk:
     raise NotImplementedError()

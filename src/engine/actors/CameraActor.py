@@ -24,7 +24,6 @@ class CameraActor(Actor):
 
   def __init__(self, xHalfHeightObserved: int, yHalfWidthObserved: int) -> None:
     super().__init__()
-    self.setView(RenderedView([['@']]))
 
     self._xHalfHeightObserved = xHalfHeightObserved
     self._yHalfWidthObserved = yHalfWidthObserved
@@ -66,5 +65,5 @@ class CameraActor(Actor):
 
 
   def tick(self) -> None:
-    self._cameraView.update(self._composeDataForCameraView())
     super().tick()
+    self._cameraView.update(self._composeDataForCameraView())

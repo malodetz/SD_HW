@@ -6,4 +6,4 @@ class TemplatedLevelLocationProvider(LevelLocationProvider):
     super().__init__(xHeightChunk, yWidthChunk)
 
   def loadChunk(self) -> Chunk:
-    return Chunk(self.xSizeChunk(), self.ySizeChunk())
+    return Chunk(self.chunkSizes())

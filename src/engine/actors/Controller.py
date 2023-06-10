@@ -8,7 +8,7 @@ class Controller:
   def __init__(self) -> None:
     self._owningPawn = None
 
-  def possess(self, pawn: Pawn) -> None:
+  def onPossess(self, pawn: Pawn) -> None:
     self._owningPawn = pawn
 
   def beginPlay() -> None:

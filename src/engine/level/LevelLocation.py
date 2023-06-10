@@ -12,23 +12,21 @@ class LevelLocation(Level):
     self._chunks = {}
     self._levelLocationProvider = levelLocationProvider
 
-  def _loadChunk(self, xCoordChunk: int, yCoordChunk: int) -> None:
-    if not (xCoordChunk, yCoordChunk) in self._chunks:
-      self._chunks[(xCoordChunk, yCoordChunk)] = self._levelLocationProvider.loadChunk()
-
-  def _xHeightChunk(self) -> int:
-    return self._levelLocationProvider.xSizeChunk()
-
-  def _yWidthChunk(self) -> int:
-    return self._levelLocationProvider.ySizeChunk()
+  def _loadChunk(self, coordsChunk: tuple[int, int]) -> None:
+    if not coordsChunk in self._chunks:
+      self._chunks[coordsChunk] = self._levelLocationProvider.loadChunk()
 
   def _chunkCoordsByPoint(self, xCoord: int, yCoord: int) -> tuple[int, int]:
-    xCoordChunk: int = xCoord // self._xHeightChunk()
-    if xCoord % self._xHeightChunk() != 0:
+    xHeightChunk: int
+    yWidthChunk: int
+    xHeightChunk, yWidthChunk = self._levelLocationProvider.chunkSizes()
+    
+    xCoordChunk: int = xCoord // xHeightChunk
+    if xCoord % xHeightChunk != 0:
       xCoordChunk += (1 if xCoord > 0 else -1)
     
-    yCoordChunk: int = yCoord // self._yWidthChunk()
-    if yCoord % self._yWidthChunk() != 0:
+    yCoordChunk: int = yCoord // yWidthChunk
+    if yCoord % yWidthChunk != 0:
       yCoordChunk += (1 if yCoord > 0 else -1)
     
     return (xCoordChunk, yCoordChunk)
@@ -44,7 +42,7 @@ class LevelLocation(Level):
 
     for xCoordChunk in range(xCoordUpperChunk, xCoordLowerChunk + 1):
       for yCoordChunk in range(yCoordUpperChunk, yCoordLowerChunk + 1):
-        self._loadChunk(xCoordChunk, yCoordChunk)
+        self._loadChunk((xCoordChunk, yCoordChunk))
 
   def tick(self) -> None:
     for (xCoord, yCoord) in self._actors.values():
