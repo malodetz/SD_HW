@@ -1,3 +1,11 @@
+from render import View
+
 class Widget:
+  _widgetView: View
+  
   def __init__(self) -> None:
-    pass
+    self._widgetView = None
+
+  def setView(self, widgetView: View) -> None:
+    self._widgetView = widgetView
+  

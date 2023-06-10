@@ -5,7 +5,7 @@ class HUD:
   _HUDView: View
 
   def __init__(self) -> None:
-    _HUDView = None
+    self._HUDView = None
 
-  def getView(self) -> View:
+  def view(self) -> View:
     return self._HUDView
