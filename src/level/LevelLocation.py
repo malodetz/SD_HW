@@ -1,4 +1,3 @@
-from actors import Actor
 from .Level import Level
 from .Chunk import Chunk
 from .LevelLocationProvider import LevelLocationProvider

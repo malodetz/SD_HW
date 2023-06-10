@@ -4,7 +4,7 @@ class LevelLocationProvider:
   _xHeightChunk: int
   _yWidthChunk: int
   
-  def __init__(self, xHeightChunk: int, yWidthChunk: int):
+  def __init__(self, xHeightChunk: int, yWidthChunk: int) -> None:
     self._xHeightChunk = xHeightChunk
     self._yWidthChunk = yWidthChunk
 

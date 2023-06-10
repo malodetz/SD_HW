@@ -26,13 +26,10 @@ class Kernel:
     self._gameInstance = GameInstance()    
     self._renderer = Renderer()
 
-  def initGame(self) -> None:
-    pass
-
   def run(self) -> None:
     while True: 
       self._gameInstance.tick()
-      
+
       renderedView: RenderedView = self._renderer.renderView(self._gameInstance.view())
       self._kernelOutput.show(renderedView)
 

@@ -9,7 +9,9 @@ from ui import HUD
 
 from render import View
 from render import CompoundView
+from render import RenderedView
 
+from actors import Actor
 from actors import CameraActor
 
 class GameInstance:
@@ -32,6 +34,10 @@ class GameInstance:
     
     self._gameView = cameraActor._cameraView
     self._world._currentLevel.spawnActor(0, 0, cameraActor)
+
+    actor: Actor = Actor()
+    actor.setView(RenderedView([["A"]]))
+    self._world._currentLevel.spawnActor(10, 10, actor)
 
   def view(self) -> View:
     return self._gameView
