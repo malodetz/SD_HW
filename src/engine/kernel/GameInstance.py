@@ -1,18 +1,18 @@
-from level import World
-from level import Level
-from level import LevelLocation
-from level import LevelLocationProvider
-from level import TemplatedLevelLocationProvider
+from engine.level import World
+from engine.level import Level
+from engine.level import LevelLocation
+from engine.level import LevelLocationProvider
+from engine.level import TemplatedLevelLocationProvider
 
 
-from ui import HUD
+from engine.ui import HUD
 
-from render import View
-from render import CompoundView
-from render import RenderedView
+from engine.render import View
+from engine.render import CompoundView
+from engine.render import RenderedView
 
-from actors import Actor
-from actors import CameraActor
+from engine.actors import Actor
+from engine.actors import CameraActor
 
 class GameInstance:
   _world: World
@@ -33,11 +33,11 @@ class GameInstance:
     cameraActor: CameraActor = CameraActor(25, 25)
     
     self._gameView = cameraActor._cameraView
-    self._world._currentLevel.spawnActor(0, 0, cameraActor)
+    self._world._currentLevel.spawnActor(cameraActor, (0, 0))
 
     actor: Actor = Actor()
     actor.setView(RenderedView([["A"]]))
-    self._world._currentLevel.spawnActor(10, 10, actor)
+    self._world._currentLevel.spawnActor(actor, (10, 10))
 
   def view(self) -> View:
     return self._gameView

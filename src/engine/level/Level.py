@@ -1,4 +1,4 @@
-from actors import Actor
+from engine.actors import Actor
 
 class Level:
   _owningWorld: 'World'
@@ -12,18 +12,23 @@ class Level:
     pass
   
 
-  def spawnActor(self, xCoord: int, yCoord: int, actor: Actor) -> None:
-    self._actors[actor] = (xCoord, yCoord)
+  def spawnActor(self, actor: Actor, coords: tuple[int, int]) -> None:
     actor.setLevel(self)
-
-  def coordsActor(self, actor: Actor) -> tuple[int, int]:
-    return self._actors[actor]
+    self.setCoordsActor(actor, coords)
+    actor.beginPlay()
 
   def despawnActor(self, actor: Actor) -> None:
     self._actors.pop(actor)
 
   def actors(self) -> list[Actor]:
     return self._actors.keys()
+
+
+  def coordsActor(self, actor: Actor) -> tuple[int, int]:
+    return self._actors[actor]
+  
+  def setCoordsActor(self, actor: Actor, coords: tuple[int, int]) -> None:
+    self._actors[actor] = coords
 
 
   def getWorld(self) -> 'World':

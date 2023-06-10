@@ -1,5 +1,5 @@
 from .Widget import Widget
-from render import View
+from engine.render import View
 
 class HUD:
   _HUDView: View

@@ -1,4 +1,4 @@
-from render import View
+from engine.render import View
 
 class Widget:
   _widgetView: View

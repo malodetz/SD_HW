@@ -1,4 +1,4 @@
-from actors import Controller
+from engine.actors import Controller
 
 class AIController(Controller):
   

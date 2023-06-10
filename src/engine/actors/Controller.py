@@ -1,5 +1,5 @@
-from actors import Pawn
-from kernel import KernelInputHandler
+from engine.actors import Pawn
+from engine.kernel import KernelInputHandler
 
 class Controller:
   _input: KernelInputHandler

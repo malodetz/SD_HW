@@ -8,4 +8,3 @@ from .AIController import AIController
 from .PlayerController import PlayerController
 
 from .Pawn import Pawn
-from .MainCharacterPawn import MainCharacterPawn

@@ -1,10 +1,10 @@
 from .Actor import Actor
 from .CameraView import CameraView
 
-from render import View
-from level import Level
+from engine.render import View
+from engine.level import Level
 
-from render import RenderedView
+from engine.render import RenderedView
 
 class CameraActor(Actor):
   """Actor representing camera. Can be exposed in the world.

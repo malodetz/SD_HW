@@ -1,5 +1,5 @@
-from render import View
-from render import CompoundView
+from engine.render import View
+from engine.render import CompoundView
 
 
 class CameraView(CompoundView):

@@ -1,6 +1,6 @@
 import curses
 
-from render import RenderedView
+from engine.render import RenderedView
 
 class KernelOutput:
   _screen: 'curses._CursesWindow'

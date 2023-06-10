@@ -1,4 +1,4 @@
-from actors import Pawn 
+from engine.actors import Pawn 
 
 class MainCharacterPawn(Pawn):
   _healthCount: int

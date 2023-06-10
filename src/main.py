@@ -1,4 +1,4 @@
-from kernel import Kernel
+from engine.kernel import Kernel
 
 def main():
   kernel = Kernel()

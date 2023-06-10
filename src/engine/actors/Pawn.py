@@ -1,4 +1,4 @@
-from actors import Actor, Controller
+from engine.actors import Actor, Controller
 
 class Pawn(Actor):
   _controller: Controller

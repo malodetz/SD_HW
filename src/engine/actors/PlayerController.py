@@ -1,5 +1,5 @@
-from actors import Controller
-from kernel import KernelInputHandler
+from engine.actors import Controller
+from engine.kernel import KernelInputHandler
 
 class PlayerController(Controller):
   _inputManager: KernelInputHandler

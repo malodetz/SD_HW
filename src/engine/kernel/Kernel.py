@@ -4,8 +4,8 @@ from .KernelInput import KernelInput
 from .KernelOutput import KernelOutput
 from .GameInstance import GameInstance
 
-from render import Renderer
-from render import RenderedView
+from engine.render import Renderer
+from engine.render import RenderedView
 
 class Kernel:
   _kernelInput: KernelInput
