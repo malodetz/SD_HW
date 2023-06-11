@@ -7,6 +7,5 @@ class CompoundView(View):
     super().__init__(xHeight, yWidth)
     self.subViews = {}
 
-  def addSubView(self, xCoord: int, yCoord: int, subView: View) -> None:
-    # self.subViews[xCoord, yCoord].append(view)
-    self.subViews[subView] = (xCoord, yCoord)
+  def addSubView(self, subView: View, coords: tuple[int, int]) -> None:
+    self.subViews[subView] = coords

@@ -4,6 +4,13 @@ from .LevelLocationProvider import LevelLocationProvider
 from .TemplatedLevelLocationProvider import TemplatedLevelLocationProvider
 
 class LevelLocation(Level):
+  """The class representing game location.
+
+  Represents a game location. Consist of many chunks, which
+  together form an entire level. Rules for level generation
+  are specified in the _levelLocationProvider. Level maintains
+  _actors and maintains some number of chunks around them.
+  """
   _chunks: dict[tuple[int, int], Chunk]
   _levelLocationProvider: LevelLocationProvider
 

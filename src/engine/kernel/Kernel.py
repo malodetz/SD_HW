@@ -20,10 +20,11 @@ class Kernel:
     screen = curses.initscr()
     curses.noecho()
     curses.cbreak()
+    curses.curs_set(0)
 
     self._kernelInput = KernelInput(screen)
     self._kernelOutput = KernelOutput(screen)
-    self._gameInstance = GameInstance()    
+    self._gameInstance = GameInstance()
     self._renderer = Renderer()
 
   def run(self) -> None:

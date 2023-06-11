@@ -11,12 +11,15 @@ class KernelOutput:
   def _inScreen(self, xCoord, yCoord) -> bool:
     if xCoord < 0 or yCoord < 0:
       return False
+    xCoordMaxScreen: int
+    yCoordMaxScreen: int
     xCoordMaxScreen, yCoordMaxScreen = self._screen.getmaxyx()
     return xCoord < xCoordMaxScreen and yCoord < yCoordMaxScreen
 
 
-  def show(self, renderedView: RenderedView) -> None:    
+  def show(self, renderedView: RenderedView) -> None:
+    self._screen.clear()
     for xCoord in range(renderedView.xHeight):
       for yCoord in range(renderedView.yWidth):
         if (self._inScreen(xCoord, yCoord)):
-          self._screen.addch(xCoord, yCoord, renderedView.at(xCoord, yCoord))
+          self._screen.insch(xCoord, yCoord, renderedView.at(xCoord, yCoord))

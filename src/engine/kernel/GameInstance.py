@@ -34,8 +34,9 @@ class GameInstance:
     initialLevel: Level = LevelLocation(initialLevelLocationProvider)
     self._world.loadLevel(initialLevel)
     
-    cameraActor: AttachableCameraActor = AttachableCameraActor(25, 25)
+    cameraActor: AttachableCameraActor = AttachableCameraActor((56, 100))
     self._gameView = cameraActor._cameraView
+    # self._composeGameView(cameraActor._cameraView)
 
     mainCharacter: MainCharacterPawn = MainCharacterPawn()
 
@@ -48,6 +49,11 @@ class GameInstance:
     actor: Actor = Actor()
     actor.setView(RenderedView([["A"]]))
     self._world._currentLevel.spawnActor(actor, (10, 10))
+
+  def _composeGameView(self, worldView: View):
+    self._gameView = CompoundView(0, 0)
+    self._gameView.addSubView(worldView, (0, 0))
+    self._gameView.addSubView(self._hud.view(), (0, worldView.yWidth))
 
   def view(self) -> View:
     return self._gameView

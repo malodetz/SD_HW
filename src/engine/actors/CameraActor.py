@@ -4,8 +4,6 @@ from .CameraView import CameraView
 from engine.render import View
 from engine.level import Level
 
-from engine.render import RenderedView
-
 class CameraActor(Actor):
   """Actor representing camera. Can be exposed in the world.
 
@@ -22,12 +20,9 @@ class CameraActor(Actor):
   _xHalfHeightObserved: int
   _yHalfWidthObserved: int
 
-  def __init__(self, xHalfHeightObserved: int, yHalfWidthObserved: int) -> None:
+  def __init__(self, fov: tuple[int, int]) -> None:
     super().__init__()
-
-    self._xHalfHeightObserved = xHalfHeightObserved
-    self._yHalfWidthObserved = yHalfWidthObserved
-    self._cameraView = CameraView(self._xHalfHeightObserved * 2 + 1, self._yHalfWidthObserved * 2 + 1)
+    self.setFOV(fov)
 
   def _isObserved(self, xCoord: int, yCoord: int) -> bool:
     xCoord: int
@@ -63,6 +58,18 @@ class CameraActor(Actor):
                                       yCoordRelative - yCoord + self._yHalfWidthObserved)
     return cameraViewData
 
+  def setFOV(self, fov: tuple[int, int]) -> None:
+    """Sets the field of view of the camera.
+
+    Sets the observable part of level for the camera.
+    Provided dimensions automatically increasing to the
+    nearest odd numbers (as the camera located in the center
+    of its "view").
+    """
+    self._xHalfHeightObserved, self._yHalfWidthObserved = fov
+    self._xHalfHeightObserved //= 2
+    self._yHalfWidthObserved //= 2
+    self._cameraView = CameraView(self._xHalfHeightObserved * 2 + 1, self._yHalfWidthObserved * 2 + 1)
 
   def tick(self) -> None:
     super().tick()
