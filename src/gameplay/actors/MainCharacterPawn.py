@@ -1,6 +1,6 @@
 from engine.actors import Pawn 
 
-from .MainPlayerController import MainPlayerController
+from engine.render import RenderedView
 
 class MainCharacterPawn(Pawn):
   _healthCount: int
@@ -8,7 +8,9 @@ class MainCharacterPawn(Pawn):
 
   def __init__(self) -> None:
     super().__init__()
-    self.possess(MainPlayerController())
+    self._healthCount = 100
+    self._expCount = 0
+    self.setView(RenderedView([["@"]]))
 
   def beginPlay(self) -> None:
     super().beginPlay()

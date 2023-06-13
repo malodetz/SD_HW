@@ -6,9 +6,8 @@ class Pawn(Actor):
   def __init__(self) -> None:
     super().__init__()
 
-  def possess(self, controller: Controller) -> None:
+  def onPossess(self, controller: Controller) -> None:
     self._controller = controller
-    controller.onPossess(self)
 
   def beginPlay(self) -> None:
     super().beginPlay()

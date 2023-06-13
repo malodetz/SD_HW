@@ -4,8 +4,8 @@ from engine.actors import CameraActor
 class AttachableCameraActor(CameraActor):
   _actorAttachedTo: Actor
 
-  def __init__(self, fov: tuple[int, int]):
-    super().__init__(fov)
+  def __init__(self):
+    super().__init__()
     self._actorAttachedTo = None
 
   def attachTo(self, actor: Actor) -> None:

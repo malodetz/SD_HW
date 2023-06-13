@@ -20,9 +20,11 @@ class CameraActor(Actor):
   _xHalfHeightObserved: int
   _yHalfWidthObserved: int
 
-  def __init__(self, fov: tuple[int, int]) -> None:
+  def __init__(self) -> None:
     super().__init__()
-    self.setFOV(fov)
+    self._cameraView = CameraView(self)
+    self._xHalfHeightObserved = 0
+    self._yHalfWidthObserved = 0
 
   def _isObserved(self, xCoord: int, yCoord: int) -> bool:
     xCoord: int
@@ -69,7 +71,8 @@ class CameraActor(Actor):
     self._xHalfHeightObserved, self._yHalfWidthObserved = fov
     self._xHalfHeightObserved //= 2
     self._yHalfWidthObserved //= 2
-    self._cameraView = CameraView(self._xHalfHeightObserved * 2 + 1, self._yHalfWidthObserved * 2 + 1)
+    self._cameraView.setResolution(self._xHalfHeightObserved * 2 + 1, \
+                                   self._yHalfWidthObserved * 2 + 1)
 
   def tick(self) -> None:
     super().tick()

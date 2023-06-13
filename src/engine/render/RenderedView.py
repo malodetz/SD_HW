@@ -12,3 +12,6 @@ class RenderedView(View):
 
   def at(self, x: int, y: int) -> str:
     return self._content[x][y]
+
+  def setResolution(self, xHeight: int, yWidth: int) -> None:
+    pass

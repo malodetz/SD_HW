@@ -1,16 +1,14 @@
 from engine.actors import PlayerController
 
 class MainPlayerController(PlayerController):
-  
   def __init__(self) -> None:
     super().__init__()
 
   def _setupInput(self) -> None:
-    # TODO: move to config #
-    self._inputManager.bind(ord('w'), self.onMoveUp)
-    self._inputManager.bind(ord('a'), self.onMoveLeft)
-    self._inputManager.bind(ord('s'), self.onMoveDown)
-    self._inputManager.bind(ord('d'), self.onMoveRight)
+    self._inputManager.bind("MoveUp", self.onMoveUp)
+    self._inputManager.bind("MoveLeft", self.onMoveLeft)
+    self._inputManager.bind("MoveDown", self.onMoveDown)
+    self._inputManager.bind("MoveRight", self.onMoveRight)
 
   def onMoveUp(self) -> None:
     self._owningPawn.coordsAddRelativeOffset(-1, 0)

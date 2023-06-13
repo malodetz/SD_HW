@@ -9,3 +9,7 @@ class CompoundView(View):
 
   def addSubView(self, subView: View, coords: tuple[int, int]) -> None:
     self.subViews[subView] = coords
+
+  def setResolution(self, xHeight: int, yWidth: int) -> None:
+    super().setResolution(xHeight, yWidth)
+    

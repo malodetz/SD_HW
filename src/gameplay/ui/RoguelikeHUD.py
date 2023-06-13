@@ -1,6 +1,6 @@
 from engine.ui import HUD
 
-class GameHUD(HUD):
+class RoguelikeHUD(HUD):
   def __init__(self):
     super().__init__()
   

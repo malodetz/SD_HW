@@ -1,5 +1,7 @@
 import curses
 
+from engine.config import BindingsConfig
+
 from .KernelInputHandler import KernelInputHandler
 
 class KernelInput:
@@ -12,11 +14,16 @@ class KernelInput:
   
   _screen: 'curses._CursesWindow'
   _inputManager: KernelInputHandler
+  _bindingsConfig: BindingsConfig
 
   def __init__(self, screen: 'curses._CursesWindow') -> None:
     self._screen = screen
     self._inputManager = KernelInputHandler()
 
+  def configureWith(self, bindingsConfig: BindingsConfig) -> None:
+    self._bindingsConfig = bindingsConfig
+
   def awaitInput(self) -> None:
     ctrl: int = self._screen.getch()
-    self._inputManager.notify(ctrl)
+    key: str = self._bindingsConfig.name(ctrl)
+    self._inputManager.notify(key)
