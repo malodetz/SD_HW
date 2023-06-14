@@ -24,14 +24,14 @@ class Actor:
   def coords(self) -> tuple[int, int]:
     return self._owningLevel.coordsActor(self)
 
-  def setCoords(self, coords: tuple[int, int]):
+  def setCoords(self, coords: tuple[int, int]) -> None:
     self._owningLevel.setCoordsActor(self, coords)
 
-  def coordsAddRelativeOffset(self, xCoordOffset, yCoordOffset: int) -> None:
-    xCoord: int
-    yCoord: int
-    xCoord, yCoord = self.coords()
-    self.setCoords((xCoord + xCoordOffset, yCoord + yCoordOffset))
+  def addCoordsRelative(self, xCoordOffset: int, yCoordOffset: int) -> None:
+    self._owningLevel.addCoordsRelative(self, (xCoordOffset, yCoordOffset))
+
+  def onCollision(self, actor: 'Actor') -> None:
+    pass
 
   def setLevel(self, level) -> None:
     self._owningLevel = level

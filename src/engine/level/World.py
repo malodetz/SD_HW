@@ -9,7 +9,7 @@ class World:
   def loadLevel(self, newLevel: Level) -> None:
     self._currentLevel = newLevel
     self._currentLevel.beginPlay()
-    for actor in self._currentLevel._actors:
+    for actor in self._currentLevel._actorsToCoords:
       actor.beginPlay()
 
   def tick(self) -> None:

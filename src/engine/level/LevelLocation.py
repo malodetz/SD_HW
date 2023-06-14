@@ -52,6 +52,6 @@ class LevelLocation(Level):
         self._loadChunk((xCoordChunk, yCoordChunk))
 
   def tick(self) -> None:
-    for (xCoord, yCoord) in self._actors.values():
+    for (xCoord, yCoord) in self._actorsToCoords.values():
       self._prepare(xCoord - 100, yCoord - 100, xCoord + 100, yCoord + 100)
     super().tick()
