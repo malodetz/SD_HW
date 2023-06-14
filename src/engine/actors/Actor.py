@@ -28,7 +28,10 @@ class Actor:
     self._owningLevel.setCoordsActor(self, coords)
 
   def addCoordsRelative(self, xCoordOffset: int, yCoordOffset: int) -> None:
-    self._owningLevel.addCoordsRelative(self, (xCoordOffset, yCoordOffset))
+    xCoord: int
+    yCoord: int
+    xCoord, yCoord = self.coords()
+    self.setCoords((xCoord + xCoordOffset, yCoord + yCoordOffset))
 
   def onCollision(self, actor: 'Actor') -> None:
     pass
