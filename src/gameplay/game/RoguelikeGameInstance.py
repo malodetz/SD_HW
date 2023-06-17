@@ -20,6 +20,7 @@ from engine.ui import BoxWidget
 from engine.ui import BarWidget
 
 from utils import Graphic
+from engine.ui import TextWidget
 
 class RoguelikeGameInstance(GameInstance):
   _mainCharacterPawn: MainCharacterPawn

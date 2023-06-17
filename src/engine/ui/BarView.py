@@ -18,6 +18,8 @@ class BarView(CompoundView):
     self._compose()
 
   def _compose(self) -> None:
+    self.subViews = {}
+
     filled: int = self._filledPart * self.yWidth
 
     currentViewContent: list[list[RenderedUnit]] = [[]]

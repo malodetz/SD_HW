@@ -8,9 +8,11 @@ from utils import Graphic
 class BoxView(CompoundView):
   def __init__(self, xHeight: int, yWidth: int) -> None:
     super().__init__(xHeight, yWidth)
-    self._composeView()
+    self._compose()
 
-  def _composeView(self) -> None:
+  def _compose(self) -> None:
+    self.subViews = {}
+
     viewContent: list[list[RenderedUnit]] = []
     for x in range(self.xHeight):
       viewContent.append([])
@@ -33,9 +35,9 @@ class BoxView(CompoundView):
     self._addSubView(RenderedView(viewContent), (0, 0))
 
   def setItemView(self, view: View) -> None:
-    self._composeView()
+    self._compose()
     self._addSubView(view, (1, 1))
 
   def setResolution(self, xHeight: int, yWidth: int) -> None:
     super().setResolution(xHeight, yWidth)
-    self._composeView()
+    self._compose()
