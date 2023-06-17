@@ -63,4 +63,4 @@ class RoguelikeGameInstance(GameInstance):
     self._gameView = RelationalCompoundView(50, 50)
     self._mainCamera.setFOV((50, 30))
     self._gameView._addSubView(self._mainCamera._cameraView, (0, 0))
-    self._gameView._addSubView(self._hud.view(), (0, self._mainCamera._cameraView.yWidth))
+    self._gameView._addSubView(self._hud.view(), (0, 30))

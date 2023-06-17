@@ -1,7 +1,4 @@
 from .Widget import Widget
-
-from engine.render import RenderedView
-from engine.render import CompoundView
 from .BoxView import BoxView
 
 class BoxWidget(Widget):
