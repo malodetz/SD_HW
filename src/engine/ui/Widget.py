@@ -4,8 +4,7 @@ class Widget:
   _widgetView: View
   
   def __init__(self) -> None:
-    self._widgetView = None
+    pass
 
-  def setView(self, widgetView: View) -> None:
-    self._widgetView = widgetView
-  
+  def view(self) -> View:
+    return self._widgetView

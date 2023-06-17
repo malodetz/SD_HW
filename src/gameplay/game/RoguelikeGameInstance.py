@@ -13,6 +13,10 @@ from gameplay.ui import RoguelikeHUD
 
 from engine.actors import Actor
 from engine.render import RenderedView
+from engine.render import RenderedUnit
+from engine.render import RelationalCompoundView
+
+from engine.ui import BoxWidget
 
 class RoguelikeGameInstance(GameInstance):
   _mainCharacterPawn: MainCharacterPawn
@@ -45,11 +49,15 @@ class RoguelikeGameInstance(GameInstance):
     self._prepareMainCamera()
 
     actor: Actor = Actor()
-    actor.setView(RenderedView([["A"]]))
+    actor.setView(RenderedView([[RenderedUnit("A")]]))
     self._world._currentLevel.spawnActor(actor, (10, 10))
 
     self._hud = RoguelikeHUD()
 
   def initView(self) -> None:
     super().initView()
-    self._gameView = self._mainCamera._cameraView
+    self._gameView = RelationalCompoundView(50, 50)
+    self._mainCamera.setFOV((50, 30))
+    self._gameView._addSubView(self._mainCamera._cameraView, (0, 0))
+    self._gameView._addSubView(self._hud.view(), (0, self._mainCamera._cameraView.yWidth))
+    # self._gameView = self._mainCamera._cameraView

@@ -22,4 +22,4 @@ class KernelOutput:
     for xCoord in range(renderedView.xHeight):
       for yCoord in range(renderedView.yWidth):
         if (self._inScreen(xCoord, yCoord)):
-          self._screen.insch(xCoord, yCoord, renderedView.at(xCoord, yCoord))
+          self._screen.insstr(xCoord, yCoord, renderedView.at(xCoord, yCoord).symbol)

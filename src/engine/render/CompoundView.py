@@ -7,7 +7,7 @@ class CompoundView(View):
     super().__init__(xHeight, yWidth)
     self.subViews = {}
 
-  def addSubView(self, subView: View, coords: tuple[int, int]) -> None:
+  def _addSubView(self, subView: View, coords: tuple[int, int]) -> None:
     self.subViews[subView] = coords
 
   def setResolution(self, xHeight: int, yWidth: int) -> None:

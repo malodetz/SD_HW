@@ -1,6 +1,7 @@
 from engine.actors import Pawn 
 
 from engine.render import RenderedView
+from engine.render import RenderedUnit
 
 class MainCharacterPawn(Pawn):
   _healthCount: int
@@ -10,7 +11,7 @@ class MainCharacterPawn(Pawn):
     super().__init__()
     self._healthCount = 100
     self._expCount = 0
-    self.setView(RenderedView([["@"]]))
+    self.setView(RenderedView([[RenderedUnit("@")]]))
 
   def beginPlay(self) -> None:
     super().beginPlay()

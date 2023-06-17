@@ -2,10 +2,10 @@ from .Widget import Widget
 from engine.render import View
 
 class HUD:
-  _HUDView: View
+  _headWidget: Widget
 
   def __init__(self) -> None:
-    self._HUDView = None
+    pass
 
   def view(self) -> View:
-    return self._HUDView
+    return self._headWidget.view()

@@ -1,0 +1,6 @@
+vline: str = "│"
+hline: str = "─"
+ulcorner: str = "╭"
+urcorner: str = "╮"
+llcorner: str = "╰"
+lrcorner: str = "╯"

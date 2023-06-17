@@ -1,7 +1,8 @@
 from .RenderedView import RenderedView
+from .RenderedUnit import RenderedUnit
 
 class RenderedViewBuilder:
-  _content: list[list[str]]
+  _content: list[list[RenderedUnit]]
   
   _xHeight: int
   _yWidth: int
@@ -11,8 +12,10 @@ class RenderedViewBuilder:
     self._xHeight = xHeight
     self._yWidth = yWidth
 
-    for _ in range(xHeight):
-      self._content.append(["."] * yWidth)
+    for x in range(xHeight):
+      self._content.append([])
+      for y in range(yWidth):
+        self._content[x].append(RenderedUnit("."))
 
   def nest(self, x: int, y: int, viewToNest: RenderedView) -> 'RenderedViewBuilder':
     for xView in range (viewToNest.xHeight):
