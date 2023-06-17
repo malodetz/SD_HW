@@ -1,17 +1,32 @@
-from engine.render import View 
+from engine.render import CompoundView
 from engine.render import RenderedView
 from engine.render import RenderedUnit
 
 from utils import Graphic
 
-class BarView(View):
-  _currentView: RenderedView
-  
-  def __init__(self, yWidth: int) -> None:
-    super().__init__(1, yWidth)
+class BarView(CompoundView):
+  _filledPart: float
+  _filledColor: int
 
-  def _composeView(self) -> None:
+  def __init__(self, yWidth: int, filledColor: int) -> None:
+    super().__init__(1, yWidth)
+    self._filledPart = 0.0
+    self._filledColor = filledColor
+
+  def fill(self, filledPart: float) -> None:
+    self._filledPart = filledPart
+    self._compose()
+
+  def _compose(self) -> None:
+    filled: int = self._filledPart * self.yWidth
+
     currentViewContent: list[list[RenderedUnit]] = [[]]
-    for _ in self.yWidth:
-      currentViewContent.append(RenderedUnit(Graphic.hline))
-    self._currentView = RenderedView(currentViewContent)
+    for y in range(self.yWidth):
+      color: int = Graphic.white if y >= filled else self._filledColor
+      currentViewContent[0].append(RenderedUnit(Graphic.hline, color))
+
+    self._addSubView(RenderedView(currentViewContent), (0, 0))
+
+  def setResolution(self, _: int, yWidth: int) -> None:
+    super().setResolution(1, yWidth)
+    self._compose()

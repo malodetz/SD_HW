@@ -17,6 +17,9 @@ from engine.render import RenderedUnit
 from engine.render import RelationalCompoundView
 
 from engine.ui import BoxWidget
+from engine.ui import BarWidget
+
+from utils import Graphic
 
 class RoguelikeGameInstance(GameInstance):
   _mainCharacterPawn: MainCharacterPawn
@@ -60,4 +63,3 @@ class RoguelikeGameInstance(GameInstance):
     self._mainCamera.setFOV((50, 30))
     self._gameView._addSubView(self._mainCamera._cameraView, (0, 0))
     self._gameView._addSubView(self._hud.view(), (0, self._mainCamera._cameraView.yWidth))
-    # self._gameView = self._mainCamera._cameraView

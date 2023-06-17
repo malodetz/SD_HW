@@ -13,21 +13,19 @@ from engine.config import Config
 
 from gameplay.game.RoguelikeGameInstance import RoguelikeGameInstance
 
+from utils import Graphic
+
 class Kernel:
   _screen: 'curses._CursesWindow'
 
   _kernelInput: KernelInput
   _kernelOutput: KernelOutput
 
-  # TODO: move to the kernel output?
   _renderer: Renderer
   _gameInstance: GameInstance
 
   def __init__(self) -> None:
-    self._screen = curses.initscr()
-    curses.noecho()
-    curses.cbreak()
-    curses.curs_set(0)
+    self._setupCurses()
 
     config = Config()
     config.bindingsConfig.bind(curses.KEY_RESIZE, "Resize")
@@ -41,6 +39,24 @@ class Kernel:
 
     self._gameInstance = RoguelikeGameInstance()
     self._onScreenResize()
+
+  def _setupCurses(self) -> None:
+    self._screen = curses.initscr()
+    curses.start_color()
+    curses.use_default_colors()
+
+    curses.init_pair(Graphic.red, curses.COLOR_RED, -1)
+    curses.init_pair(Graphic.yellow, curses.COLOR_YELLOW, -1)
+    curses.init_pair(Graphic.green, curses.COLOR_GREEN, -1)
+    curses.init_pair(Graphic.cyan, curses.COLOR_CYAN, -1)
+    curses.init_pair(Graphic.blue, curses.COLOR_BLUE, -1)
+    curses.init_pair(Graphic.magenta, curses.COLOR_MAGENTA, -1)
+    curses.init_pair(Graphic.black, curses.COLOR_BLACK, -1)
+    curses.init_pair(Graphic.white, curses.COLOR_WHITE, -1)
+
+    curses.noecho()
+    curses.cbreak()
+    curses.curs_set(0)
 
   def _onScreenResize(self) -> None:
     xSizeScreen: int

@@ -22,4 +22,6 @@ class KernelOutput:
     for xCoord in range(renderedView.xHeight):
       for yCoord in range(renderedView.yWidth):
         if (self._inScreen(xCoord, yCoord)):
-          self._screen.insstr(xCoord, yCoord, renderedView.at(xCoord, yCoord).symbol)
+          color: int = renderedView.at(xCoord, yCoord).color
+          symbol: str = renderedView.at(xCoord, yCoord).symbol
+          self._screen.insstr(xCoord, yCoord, symbol, curses.color_pair(color))

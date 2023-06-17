@@ -4,16 +4,13 @@ from .Widget import Widget
 from .BarView import BarView
 
 class BarWidget(Widget):
-  _filled: float
-
-  def __init__(self, yWidth: int) -> None:
+  def __init__(self, yWidth: int, filledColor: int) -> None:
     super().__init__()
-    self._filled = 0.0
-    self._widgetView = BarView(yWidth)
+    self._widgetView = BarView(yWidth, filledColor)
 
-  def fill(self, filled: float) -> None:
-    if filled < 0.0:
-      filled = 0.0
-    if filled >= 1.0:
-      filled = 1.0
-    self._filled = filled
+  def fill(self, filledPart: float) -> None:
+    if filledPart < 0.0:
+      filledPart = 0.0
+    if filledPart >= 1.0:
+      filledPart = 1.0
+    self._widgetView.fill(filledPart)
