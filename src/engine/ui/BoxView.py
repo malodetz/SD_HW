@@ -6,8 +6,11 @@ from engine.render import RenderedUnit
 from utils import Graphic
 
 class BoxView(CompoundView):
+  _lastItemView: View
+  
   def __init__(self, xHeight: int, yWidth: int) -> None:
     super().__init__(xHeight, yWidth)
+    self._lastItemView = None
     self._compose()
 
   def _compose(self) -> None:
@@ -32,8 +35,12 @@ class BoxView(CompoundView):
 
   def setItem(self, view: View) -> None:
     self._compose()
+    self._lastItemView = view
+    view.setResolution(self.xHeight - 2, self.yWidth - 2)
     self._addSubView(view, (1, 1))
 
   def setResolution(self, xHeight: int, yWidth: int) -> None:
     super().setResolution(xHeight, yWidth)
     self._compose()
+    if not self._lastItemView is None:
+      self.setItem(self._lastItemView)
