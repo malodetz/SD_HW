@@ -34,7 +34,7 @@ class BoxView(CompoundView):
 
     self._addSubView(RenderedView(viewContent), (0, 0))
 
-  def setItemView(self, view: View) -> None:
+  def setItem(self, view: View) -> None:
     self._compose()
     self._addSubView(view, (1, 1))
 

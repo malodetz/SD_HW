@@ -10,6 +10,7 @@ class BoxWidget(Widget):
 
   def setItem(self, item: Widget) -> None:
     self._item = item
+    self._widgetView.setItem(item.view())
 
   def view(self) -> None:
     return self._widgetView
