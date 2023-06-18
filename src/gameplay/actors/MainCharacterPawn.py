@@ -13,7 +13,7 @@ class MainCharacterPawn(Pawn):
     super().__init__()
     self._healthCount = 100
     self._expCount = 0
-    self.setView(RenderedView([[RenderedUnit("@", Graphic.magenta)]]))
+    self.setView(RenderedView(1, 1, {(0, 0): RenderedUnit("@", Graphic.magenta)}))
 
   def beginPlay(self) -> None:
     super().beginPlay()

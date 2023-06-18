@@ -14,6 +14,8 @@ class Level:
       actor.beginPlay()
 
   def spawnActor(self, actor: Actor, coords: tuple[int, int]) -> None:
+    if actor in self._actorsToCoords:
+      return
     actor.setLevel(self)
     self.setCoordsActor(actor, coords)
     actor.beginPlay()

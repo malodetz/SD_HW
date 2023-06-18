@@ -13,26 +13,22 @@ class BoxView(CompoundView):
   def _compose(self) -> None:
     self.subViews = {}
 
-    viewContent: list[list[RenderedUnit]] = []
-    for x in range(self.xHeight):
-      viewContent.append([])
-      for y in range(self.yWidth):
-        viewContent[x].append(RenderedUnit(" "))
+    viewContent: dict[tuple[int, int], RenderedUnit] = {}
     
-    viewContent[0][0] = RenderedUnit(Graphic.ulcorner)
-    viewContent[0][self.yWidth - 1] = RenderedUnit(Graphic.urcorner)
-    viewContent[self.xHeight - 1][0] = RenderedUnit(Graphic.llcorner)
-    viewContent[self.xHeight - 1][self.yWidth - 1] = RenderedUnit(Graphic.lrcorner)
+    viewContent[(0, 0)] = RenderedUnit(Graphic.ulcorner)
+    viewContent[(0, self.yWidth - 1)] = RenderedUnit(Graphic.urcorner)
+    viewContent[(self.xHeight - 1, 0)] = RenderedUnit(Graphic.llcorner)
+    viewContent[(self.xHeight - 1, self.yWidth - 1)] = RenderedUnit(Graphic.lrcorner)
 
     for x in range(1, self.xHeight - 1):
-      viewContent[x][0] = RenderedUnit(Graphic.vline)
-      viewContent[x][self.yWidth - 1] = RenderedUnit(Graphic.vline)
+      viewContent[(x, 0)] = RenderedUnit(Graphic.vline)
+      viewContent[(x, self.yWidth - 1)] = RenderedUnit(Graphic.vline)
 
     for y in range(1, self.yWidth - 1):
-      viewContent[0][y] = RenderedUnit(Graphic.hline)
-      viewContent[self.xHeight - 1][y] = RenderedUnit(Graphic.hline)
+      viewContent[(0, y)] = RenderedUnit(Graphic.hline)
+      viewContent[(self.xHeight - 1, y)] = RenderedUnit(Graphic.hline)
 
-    self._addSubView(RenderedView(viewContent), (0, 0))
+    self._addSubView(RenderedView(self.xHeight, self.yWidth, viewContent), (0, 0))
 
   def setItem(self, view: View) -> None:
     self._compose()

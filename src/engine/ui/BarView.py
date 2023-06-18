@@ -22,12 +22,12 @@ class BarView(CompoundView):
 
     filled: int = self._filledPart * self.yWidth
 
-    currentViewContent: list[list[RenderedUnit]] = [[]]
+    currentViewContent: dict[tuple[int, int], list[RenderedUnit]] = {}
     for y in range(self.yWidth):
       color: int = Graphic.white if y >= filled else self._filledColor
-      currentViewContent[0].append(RenderedUnit(Graphic.hline, color))
+      currentViewContent[(0, y)] = RenderedUnit(Graphic.hline, color)
 
-    self._addSubView(RenderedView(currentViewContent), (0, 0))
+    self._addSubView(RenderedView(self.xHeight, self.yWidth, currentViewContent), (0, 0))
 
   def setResolution(self, _: int, yWidth: int) -> None:
     super().setResolution(1, yWidth)

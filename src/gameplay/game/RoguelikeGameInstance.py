@@ -53,8 +53,9 @@ class RoguelikeGameInstance(GameInstance):
     self._prepareMainCamera()
 
     actor: Actor = Actor()
-    actor.setView(RenderedView([[RenderedUnit("A")]]))
-    self._world._currentLevel.spawnActor(actor, (10, 10))
+
+    actor.setView(RenderedView(1, 1, {(0, 0): RenderedUnit("A")}))
+    self._world._currentLevel.spawnActor(actor, (1, 1))
 
     self._hud = RoguelikeHUD()
 

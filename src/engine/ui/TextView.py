@@ -16,17 +16,13 @@ class TextView(CompoundView):
     self.subViews = {}
 
     self._text = text
-    content: list[list[RenderedUnit]] = []
-    for x in range(self.xHeight):
-      content.append([])
-      for y in range(self.yWidth):
-        content[x].append(RenderedUnit(" "))
+    content: dict[tuple[int, int], RenderedUnit] = {}
     for i in range(len(text)):
       xPos: int = i // self.yWidth
       yPos: int = i % self.yWidth
       if xPos < self.xHeight and yPos < self.yWidth:
-        content[xPos][yPos] = RenderedUnit(text[i], self._color)    
-    self._addSubView(RenderedView(content), (0, 0))
+        content[(xPos, yPos)] = RenderedUnit(text[i], self._color)    
+    self._addSubView(RenderedView(self.xHeight, self.yWidth, content), (0, 0))
 
   def setResolution(self, xHeight: int, yWidth: int) -> None:
     super().setResolution(xHeight, yWidth)
