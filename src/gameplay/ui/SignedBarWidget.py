@@ -4,30 +4,31 @@ from engine.ui import TextWidget
 
 from engine.render import RelationalCompoundView
 
+
 class SignedBarWidget(CompoundWidget):
-  _bar: BarWidget
-  _text: TextWidget
-  
-  _maxBound: int
+    _bar: BarWidget
+    _text: TextWidget
 
-  def __init__(self, yWidth: int, color: int) -> None:
-    super().__init__(1, yWidth)
-    self._bar = BarWidget(yWidth - 8, color)
-    self._text = TextWidget(1, 7, color)
-    self.setMaxBound()
+    _maxBound: int
 
-    self._widgetView = RelationalCompoundView(1, yWidth)
-    self._widgetView._addSubView(self._bar.view(), (0, 0))
-    self._widgetView._addSubView(self._text.view(), (0, yWidth - 7))
+    def __init__(self, yWidth: int, color: int) -> None:
+        super().__init__(1, yWidth)
+        self._bar = BarWidget(yWidth - 8, color)
+        self._text = TextWidget(1, 7, color)
+        self.setMaxBound()
 
-  def setMaxBound(self, maxBound: int = 100) -> None:
-    self._maxBound = maxBound
+        self._widgetView = RelationalCompoundView(1, yWidth)
+        self._widgetView._addSubView(self._bar.view(), (0, 0))
+        self._widgetView._addSubView(self._text.view(), (0, yWidth - 7))
 
-  def fill(self, filledPart: float) -> None:
-    self._bar.fill(filledPart)
-    filled: int = int(filledPart * self._maxBound)
+    def setMaxBound(self, maxBound: int = 100) -> None:
+        self._maxBound = maxBound
 
-    text: str = "{}/{}".format(filled, self._maxBound)
-    self._widgetView.setResolution(1, self._bar._widgetView.yWidth + len(text))
+    def fill(self, filledPart: float) -> None:
+        self._bar.fill(filledPart)
+        filled: int = int(filledPart * self._maxBound)
 
-    self._text.setText(text)
+        text: str = "{}/{}".format(filled, self._maxBound)
+        self._widgetView.setResolution(1, self._bar._widgetView.yWidth + len(text))
+
+        self._text.setText(text)

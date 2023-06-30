@@ -1,16 +1,17 @@
 from engine.actors import Actor, Controller
 
+
 class Pawn(Actor):
-  _controller: Controller
-  
-  def __init__(self) -> None:
-    super().__init__()
+    _controller: Controller
 
-  def onPossess(self, controller: Controller) -> None:
-    self._controller = controller
+    def __init__(self) -> None:
+        super().__init__()
 
-  def beginPlay(self) -> None:
-    super().beginPlay()
+    def onPossess(self, controller: Controller) -> None:
+        self._controller = controller
 
-  def getController(self) -> Controller:
-    return self._controller
+    def beginPlay(self) -> None:
+        super().beginPlay()
+
+    def getController(self) -> Controller:
+        return self._controller

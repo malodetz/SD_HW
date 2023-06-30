@@ -1,16 +1,17 @@
 from engine.actors import Controller
 from engine.kernel.KernelInputHandler import KernelInputHandler
 
+
 class PlayerController(Controller):
-  _inputManager: KernelInputHandler
-  
-  def __init__(self) -> None:
-    super().__init__()
-    self._inputManager = KernelInputHandler()
-    self._setupInput()
+    _inputManager: KernelInputHandler
 
-  def _setupInput(self):
-    pass
+    def __init__(self) -> None:
+        super().__init__()
+        self._inputManager = KernelInputHandler()
+        self._setupInput()
 
-  def beginPlay() -> None:
-    super().beginPlay()
+    def _setupInput(self):
+        pass
+
+    def beginPlay() -> None:
+        super().beginPlay()

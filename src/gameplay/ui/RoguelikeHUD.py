@@ -10,20 +10,20 @@ from .SignedBarWidget import SignedBarWidget
 
 
 class RoguelikeHUD(HUD):
-  def __init__(self):
-    super().__init__()
-    self._compose()
-  
-  def _compose(self) -> None:
-    boxWidget: BoxWidget = BoxWidget(50, 20)
+    def __init__(self):
+        super().__init__()
+        self._compose()
 
-    infoWidget: CompoundWidget = CompoundWidget(50, 20)
-    infoView: RelationalCompoundView = RelationalCompoundView(50, 20)
-    infoWidget._widgetView = infoView
+    def _compose(self) -> None:
+        boxWidget: BoxWidget = BoxWidget(50, 20)
 
-    signedBarWidget: SignedBarWidget = SignedBarWidget(20, Graphic.red)
-    signedBarWidget.fill(0.55)
-    infoView._addSubView(signedBarWidget.view(), (1, 1))
+        infoWidget: CompoundWidget = CompoundWidget(50, 20)
+        infoView: RelationalCompoundView = RelationalCompoundView(50, 20)
+        infoWidget._widgetView = infoView
 
-    boxWidget.setItem(infoWidget)
-    self._headWidget = boxWidget
+        signedBarWidget: SignedBarWidget = SignedBarWidget(20, Graphic.red)
+        signedBarWidget.fill(0.55)
+        infoView._addSubView(signedBarWidget.view(), (1, 1))
+
+        boxWidget.setItem(infoWidget)
+        self._headWidget = boxWidget
