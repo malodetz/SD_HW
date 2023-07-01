@@ -1,2 +1,3 @@
-# SD_HW
-Repository for Software Design course homewroks
+# Декомпозиця игры
+
+![Дигнрамма классов](img/hw6-class-diagram.png)
