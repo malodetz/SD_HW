@@ -7,7 +7,7 @@ from .BarView import BarView
 class BarWidget(Widget):
     def __init__(self, yWidth: int, filledColor: int) -> None:
         super().__init__()
-        self._widgetView = BarView(yWidth, filledColor)
+        self._widgetView = BarView(yWidth, filledColor, self)
 
     def fill(self, filledPart: float) -> None:
         if filledPart < 0.0:

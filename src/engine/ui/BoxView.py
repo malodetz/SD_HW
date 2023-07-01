@@ -1,16 +1,17 @@
 from engine.render import View
-from engine.render import CompoundView
 from engine.render import RenderedView
 from engine.render import RenderedUnit
 
+from .WidgetView import WidgetView
+from .Widget import Widget
+
 from utils import Graphic
 
-
-class BoxView(CompoundView):
+class BoxView(WidgetView):
     _lastItemView: View
 
-    def __init__(self, xHeight: int, yWidth: int) -> None:
-        super().__init__(xHeight, yWidth)
+    def __init__(self, xHeight: int, yWidth: int, widget: Widget) -> None:
+        super().__init__(xHeight, yWidth, widget)
         self._lastItemView = None
         self._compose()
 

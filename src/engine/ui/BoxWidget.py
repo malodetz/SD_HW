@@ -7,7 +7,7 @@ class BoxWidget(Widget):
 
     def __init__(self, xHeight: int, yWidth: int) -> None:
         super().__init__()
-        self._widgetView = BoxView(xHeight, yWidth)
+        self._widgetView = BoxView(xHeight, yWidth, self)
 
     def setItem(self, item: Widget) -> None:
         self._item = item

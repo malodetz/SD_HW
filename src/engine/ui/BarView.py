@@ -1,16 +1,17 @@
-from engine.render import CompoundView
 from engine.render import RenderedView
 from engine.render import RenderedUnit
 
+from .WidgetView import WidgetView
+from .Widget import Widget
+
 from utils import Graphic
 
-
-class BarView(CompoundView):
+class BarView(WidgetView):
     _filledPart: float
     _filledColor: int
 
-    def __init__(self, yWidth: int, filledColor: int) -> None:
-        super().__init__(1, yWidth)
+    def __init__(self, yWidth: int, filledColor: int, widget: Widget) -> None:
+        super().__init__(1, yWidth, widget)
         self._filledPart = 0.0
         self._filledColor = filledColor
 

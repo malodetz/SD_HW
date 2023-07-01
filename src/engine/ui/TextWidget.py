@@ -9,7 +9,7 @@ class TextWidget(Widget):
 
     def __init__(self, xHeight: int, yWidth: int, color: int = Graphic.white) -> None:
         super().__init__()
-        self._widgetView = TextView(xHeight, yWidth, color)
+        self._widgetView = TextView(xHeight, yWidth, color, self)
         self.setText("")
 
     def setText(self, text: str) -> None:

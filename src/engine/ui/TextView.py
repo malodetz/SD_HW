@@ -1,15 +1,15 @@
-from engine.render import CompoundView
-
 from engine.render import RenderedView
 from engine.render import RenderedUnit
 
+from .WidgetView import WidgetView
+from .Widget import Widget
 
-class TextView(CompoundView):
+class TextView(WidgetView):
     _color: int
     _text: str
 
-    def __init__(self, xHeight: int, yWidth: int, color: int) -> CompoundView:
-        super().__init__(xHeight, yWidth)
+    def __init__(self, xHeight: int, yWidth: int, color: int, widget: Widget) -> None:
+        super().__init__(xHeight, yWidth, widget)
         self._color = color
         self.setText("")
 

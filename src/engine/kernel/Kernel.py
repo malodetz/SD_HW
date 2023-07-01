@@ -62,7 +62,7 @@ class Kernel:
         curses.noecho()
         curses.cbreak()
         curses.curs_set(0)
-        curses.mousemask(curses.ALL_MOUSE_EVENTS)
+        curses.mousemask(curses.BUTTON1_CLICKED)
         self._screen.keypad(1) 
 
     def _onScreenResize(self) -> None:
@@ -77,7 +77,7 @@ class Kernel:
         button: int
         _, yCoord, xCoord, _, button = curses.getmouse()
 
-        if button is curses.BUTTON1_CLICKED:
+        if button & curses.BUTTON1_CLICKED:
             self._gameInstance.view().onClick(xCoord, yCoord)
 
 
