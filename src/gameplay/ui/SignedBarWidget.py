@@ -18,8 +18,8 @@ class SignedBarWidget(CompoundWidget):
         self.setMaxBound()
 
         self._widgetView = RelationalCompoundView(1, yWidth)
-        self._widgetView._addSubView(self._bar.view(), (0, 0))
-        self._widgetView._addSubView(self._text.view(), (0, yWidth - 7))
+        self._widgetView.addSubView(self._bar.view(), (0, 0))
+        self._widgetView.addSubView(self._text.view(), (0, yWidth - 7))
 
     def setMaxBound(self, maxBound: int = 100) -> None:
         self._maxBound = maxBound

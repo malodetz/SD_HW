@@ -1,8 +1,7 @@
 from engine.ui import HUD
 from engine.ui import BoxWidget
-from engine.ui import CompoundWidget
-
-from engine.render import RelationalCompoundView
+from engine.ui import RelationalCompoundWidget
+from engine.ui import ButtonWidget
 
 from utils import Graphic
 
@@ -17,13 +16,14 @@ class RoguelikeHUD(HUD):
     def _compose(self) -> None:
         boxWidget: BoxWidget = BoxWidget(50, 20)
 
-        infoWidget: CompoundWidget = CompoundWidget(50, 20)
-        infoView: RelationalCompoundView = RelationalCompoundView(50, 20)
-        infoWidget._widgetView = infoView
+        infoWidget: RelationalCompoundWidget = RelationalCompoundWidget(50, 20)
+        
+        buttonWidget: ButtonWidget = ButtonWidget(50, 20)
+        infoWidget.addSubWidget(buttonWidget, (0, 0))
 
         signedBarWidget: SignedBarWidget = SignedBarWidget(20, Graphic.red)
         signedBarWidget.fill(0.55)
-        infoView._addSubView(signedBarWidget.view(), (1, 1))
+        infoWidget.addSubWidget(signedBarWidget, (1, 1))
 
         boxWidget.setItem(infoWidget)
         self._headWidget = boxWidget

@@ -7,3 +7,6 @@ class View:
 
     def setResolution(self, xHeight: int, yWidth: int) -> None:
         self.xHeight, self.yWidth = xHeight, yWidth
+    
+    def onClick(self, xCoord: int, yCoord: int) -> None:
+        pass

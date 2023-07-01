@@ -23,7 +23,7 @@ class TextView(CompoundView):
             yPos: int = i % self.yWidth
             if xPos < self.xHeight and yPos < self.yWidth:
                 content[(xPos, yPos)] = RenderedUnit(text[i], self._color)
-        self._addSubView(RenderedView(self.xHeight, self.yWidth, content), (0, 0))
+        self.addSubView(RenderedView(self.xHeight, self.yWidth, content), (0, 0))
 
     def setResolution(self, xHeight: int, yWidth: int) -> None:
         super().setResolution(xHeight, yWidth)

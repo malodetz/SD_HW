@@ -32,13 +32,13 @@ class BoxView(CompoundView):
             viewContent[(0, y)] = RenderedUnit(Graphic.hline)
             viewContent[(self.xHeight - 1, y)] = RenderedUnit(Graphic.hline)
 
-        self._addSubView(RenderedView(self.xHeight, self.yWidth, viewContent), (0, 0))
+        self.addSubView(RenderedView(self.xHeight, self.yWidth, viewContent), (0, 0))
 
     def setItem(self, view: View) -> None:
         self._compose()
         self._lastItemView = view
         view.setResolution(self.xHeight - 2, self.yWidth - 2)
-        self._addSubView(view, (1, 1))
+        self.addSubView(view, (1, 1))
 
     def setResolution(self, xHeight: int, yWidth: int) -> None:
         super().setResolution(xHeight, yWidth)

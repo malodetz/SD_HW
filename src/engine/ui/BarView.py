@@ -28,7 +28,7 @@ class BarView(CompoundView):
             color: int = Graphic.white if y >= filled else self._filledColor
             currentViewContent[(0, y)] = RenderedUnit(Graphic.hline, color)
 
-        self._addSubView(RenderedView(self.xHeight, self.yWidth, currentViewContent), (0, 0))
+        self.addSubView(RenderedView(self.xHeight, self.yWidth, currentViewContent), (0, 0))
 
     def setResolution(self, _: int, yWidth: int) -> None:
         super().setResolution(1, yWidth)

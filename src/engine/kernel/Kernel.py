@@ -30,10 +30,14 @@ class Kernel:
 
         config = Config()
         config.bindingsConfig.bind(curses.KEY_RESIZE, "Resize")
+        config.bindingsConfig.bind(curses.KEY_MOUSE, "MouseEvent")
 
         self._kernelInput = KernelInput(self._screen)
-        KernelInputHandler().bind("Resize", self._onScreenResize)
         self._kernelInput.configureWith(config.bindingsConfig)
+
+
+        KernelInputHandler().bind("Resize", self._onScreenResize)
+        KernelInputHandler().bind("MouseEvent", self._onMouseEvent)
 
         self._renderer = Renderer()
         self._kernelOutput = KernelOutput(self._screen)
@@ -58,12 +62,24 @@ class Kernel:
         curses.noecho()
         curses.cbreak()
         curses.curs_set(0)
+        curses.mousemask(curses.ALL_MOUSE_EVENTS)
+        self._screen.keypad(1) 
 
     def _onScreenResize(self) -> None:
         xSizeScreen: int
         ySizeScreen: int
         xSizeScreen, ySizeScreen = self._screen.getmaxyx()
         self._gameInstance.view().setResolution(xSizeScreen, ySizeScreen)
+
+    def _onMouseEvent(self) -> None:
+        xCoord: int
+        yCoord: int
+        button: int
+        _, yCoord, xCoord, _, button = curses.getmouse()
+
+        if button is curses.BUTTON1_CLICKED:
+            self._gameInstance.view().onClick(xCoord, yCoord)
+
 
     def run(self) -> None:
         while True:

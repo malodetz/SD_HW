@@ -10,3 +10,7 @@ class CompoundWidget(Widget):
         super().__init__()
         self._child = {}
         self._widgetView = CompoundView(xHeight, yWidth)
+
+    def addSubWidget(self, subWidget: Widget, coords: tuple[int, int]) -> None:
+        self._child[subWidget] = coords
+        self._widgetView.addSubView(subWidget.view(), coords)

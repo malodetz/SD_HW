@@ -13,10 +13,11 @@ class Renderer:
     def renderView(self, view: View) -> RenderedView:
         if isinstance(view, CompoundView):
             return self._renderCompoundView(view)
+        if isinstance(view, RenderedView):
+            return self._renderSingleView(view)
+        return RenderedView(view.xHeight, view.yWidth, {})
 
-        return self._renderSingleView(view)
-
-    def _renderSingleView(self, view: View) -> RenderedView:
+    def _renderSingleView(self, view: RenderedView) -> RenderedView:
         renderedViewBuilder: RenderedViewBuilder = RenderedViewBuilder(view.xHeight, view.yWidth)
         renderedViewBuilder.nest(0, 0, view)
         return renderedViewBuilder.build()

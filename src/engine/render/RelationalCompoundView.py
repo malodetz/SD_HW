@@ -22,8 +22,8 @@ class RelationalCompoundView(CompoundView):
         super().__init__(xHeight, yWidth)
         self._history = {}
 
-    def _addSubView(self, subView: View, coords: tuple[int, int]) -> None:
-        super()._addSubView(subView, coords)
+    def addSubView(self, subView: View, coords: tuple[int, int]) -> None:
+        super().addSubView(subView, coords)
 
         xCoord: int
         yCoord: int
