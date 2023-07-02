@@ -25,6 +25,10 @@ class KernelInput:
         self._bindingsConfig = bindingsConfig
 
     def awaitInput(self) -> None:
-        ctrl: int = self._screen.getch()
-        key: str = self._bindingsConfig.name(ctrl)
-        self._inputManager.notify(key)
+        while True:
+            ctrl: int = self._screen.getch()
+            key: str = self._bindingsConfig.name(ctrl)
+            # Wait only for registered keys
+            if key is not None:
+                self._inputManager.notify(key)
+                return

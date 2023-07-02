@@ -43,6 +43,7 @@ class Kernel:
         self._kernelOutput = KernelOutput(self._screen)
 
         self._gameInstance = RoguelikeGameInstance()
+        # Fit the current screen size
         self._onScreenResize()
 
     def _setupCurses(self) -> None:
@@ -62,11 +63,11 @@ class Kernel:
         curses.noecho()
         curses.cbreak()
         curses.curs_set(0)
-        curses.mousemask(curses.BUTTON1_CLICKED)
-        self._screen.keypad(1) 
+        curses.mousemask(curses.ALL_MOUSE_EVENTS)
+        self._screen.keypad(True) 
 
     def _onScreenResize(self) -> None:
-        xSizeScreen: int
+        xSizeScreen: int    
         ySizeScreen: int
         xSizeScreen, ySizeScreen = self._screen.getmaxyx()
         self._gameInstance.view().setResolution(xSizeScreen, ySizeScreen)
@@ -77,9 +78,8 @@ class Kernel:
         button: int
         _, yCoord, xCoord, _, button = curses.getmouse()
 
-        if button & curses.BUTTON1_CLICKED:
+        if button is curses.BUTTON1_CLICKED:
             self._gameInstance.view().onClick(xCoord, yCoord)
-
 
     def run(self) -> None:
         while True:
