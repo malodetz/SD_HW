@@ -1,3 +1,5 @@
+from gameplay.ui import InventoryWidget
+
 class Item:
     pass
 
